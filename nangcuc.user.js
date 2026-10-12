@@ -1,37 +1,32 @@
 // ==UserScript==
-// @name         Motchill VIP & Cinema Pro Suite
+// @name         NangCuc TV VIP & Cinema Pro Suite
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  Chặn 100% quảng cáo + Anti-AdBlock + M3U8 Stream Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên Motchill
+// @description  Chặn 100% quảng cáo + Anti-AdBlock + M3U8 Stream Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên Nắng Cực TV
 // @author       ekaznyra
-// @match        *://*.phimmotchill.online/*
-// @match        *://*.motchill.online/*
-// @match        *://*.motchilltv.org/*
-// @match        *://*.motchilltv.com/*
-// @match        *://*.phimmotchill.com/*
-// @match        *://*.phimmotchill.run/*
-// @match        *://*.phimmotchill.me/*
-// @match        *://*.motchill.moe/*
-// @match        *://*.motchilli.com/*
-// @match        *://*.motchilli.vip/*
+// @match        *://*.nangcuc.tv/*
+// @match        *://*.nangcuc.net/*
+// @match        *://*.nangcuc.cc/*
+// @match        *://*.nangcuctv.cc/*
+// @match        *://*.nangcuctv.site/*
+// @match        *://*.nangcucphim.ws/*
+// @match        *://*.nangcuc.com/*
+// @match        *://*.nangcuc.in/*
 // @match        *://*.streamc.xyz/*
 // @match        *://embed*.streamc.xyz/*
 // @allFrames    true
 // @run-at       document-start
 // @grant        none
 // @license      MIT
-// @icon         https://phimmotchill.online/favicon.ico
+// @icon         https://nangcuc.tv/favicon.ico
 // @homepageURL  https://github.com/ekaznyra/bypass-rophim
-// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-motchill.user.js
-// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-motchill.user.js
+// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/nangcuc.user.js
+// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/nangcuc.user.js
 // ==/UserScript==
 
 (function () {
   "use strict";
 
-  // ═══════════════════════════════════════════════════════════════
-  // ⚡ 1. IFRAME EMBED PLAYER GUARD KILLER & SNIFFER
-  // ═══════════════════════════════════════════════════════════════
   const isEmbed =
     window.self !== window.top ||
     location.hostname.includes("streamc") ||
@@ -137,7 +132,7 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // 🛡️ 2. WEBSITE CHÍNH (MOTCHILL) - POPUP & BANNER ANNIHILATION
+  // 🛡️ 2. WEBSITE CHÍNH (NẮNG CỰC TV) - BANNER & POPUP KILLER
   // ═══════════════════════════════════════════════════════════════
 
   let capturedStreamUrl = "";
@@ -145,14 +140,13 @@
   let isHdrEnabled = false;
   let isTheaterMode = false;
 
-  // Chặn đứng window.open quảng cáo nhảy tab
   try {
     const origOpen = window.open;
     window.open = function (url) {
       if (typeof url === "string") {
-        const isSafe = url.startsWith("/") || url.includes("motchill") || url.includes("youtube.com");
+        const isSafe = url.startsWith("/") || url.includes("nangcuc") || url.includes("youtube.com");
         if (!isSafe) {
-          console.log("[Motchill Bypass] Đã chặn popup:", url);
+          console.log("[NangCuc Bypass] Đã chặn popup:", url);
           return null;
         }
       }
@@ -160,11 +154,10 @@
     };
   } catch (e) {}
 
-  // Lắng nghe luồng Stream M3U8 từ Iframe
   window.addEventListener("message", function (event) {
     if (event.data && event.data.type === "RO_STREAM_FOUND") {
       capturedStreamUrl = event.data.streamUrl;
-      console.log("%c🎬 [Motchill Sniffer] M3U8 Found:", "color: #51f085;", capturedStreamUrl);
+      console.log("%c🎬 [NangCuc Sniffer] M3U8 Found:", "color: #51f085;", capturedStreamUrl);
       const btn = document.getElementById("ro-potplayer-btn");
       if (btn) {
         btn.style.borderColor = "#51f085";
@@ -179,12 +172,9 @@
     });
   }
 
-  // Tiêm CSS dọn sạch banner quảng cáo Motchill & mở rộng rạp phim
   const css = `
-    /* Xóa sạch các vùng quảng cáo Motchill */
-    .ad-container, .ads-holder, .banner-left, .banner-right,
-    div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"],
-    .ads-wrapper, #chancoc, .modal-adblock {
+    .ad-banner, .banner-ads, #box-ads, div[id*="ad_"], div[class*="ad_box"],
+    .ads-placement, #catfish, .modal-adblock, div[style*="z-index: 9999999"] {
       display: none !important;
       visibility: hidden !important;
       height: 0 !important;
@@ -198,7 +188,8 @@
     }
     body.ro-theater-active header,
     body.ro-theater-active footer,
-    body.ro-theater-active .sidebar {
+    body.ro-theater-active .sidebar,
+    body.ro-theater-active .content-right {
       opacity: 0.1 !important;
       transition: opacity 0.3s ease;
     }
@@ -206,15 +197,14 @@
     body.ro-theater-active footer:hover {
       opacity: 1 !important;
     }
-    body.ro-theater-active .player-wrapper,
-    body.ro-theater-active .player-container,
-    body.ro-theater-active iframe#embed-player {
+    body.ro-theater-active .player,
+    body.ro-theater-active #player-holder,
+    body.ro-theater-active iframe {
       max-height: 88vh !important;
       box-shadow: 0 10px 50px rgba(81, 240, 133, 0.25) !important;
       border-radius: 14px;
     }
 
-    /* VIP Floating Control Hub */
     #ro-vip-hub {
       position: fixed;
       bottom: 24px;
@@ -226,12 +216,12 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
+      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.45);
       cursor: pointer;
       font-size: 20px;
       border: 2px solid rgba(255, 255, 255, 0.3);
@@ -257,7 +247,7 @@
     .ro-menu-title {
       font-size: 13px;
       font-weight: 700;
-      color: #51f085;
+      color: #f59e0b;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -278,8 +268,8 @@
       cursor: pointer;
     }
     .ro-menu-btn:hover {
-      background: rgba(81, 240, 133, 0.15);
-      border-color: #51f085;
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
       color: #fff;
     }
     .ro-badge {
@@ -296,8 +286,8 @@
       transform: translateX(-50%) translateY(-20px);
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(81, 240, 133, 0.4);
-      color: #51f085;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #f59e0b;
       padding: 10px 22px;
       border-radius: 30px;
       font-size: 13px;
@@ -382,10 +372,10 @@
     const hub = document.createElement("div");
     hub.id = "ro-vip-hub";
     hub.innerHTML = `
-      <div id="ro-vip-hub-btn" title="Motchill VIP Control Hub">👑</div>
+      <div id="ro-vip-hub-btn" title="Nắng Cực VIP Control Hub">☀️</div>
       <div id="ro-vip-menu">
         <div class="ro-menu-title">
-          <span>🎬 MOTCHILL CINEMA PRO</span>
+          <span>🎬 NẮNG CỰC CINEMA PRO</span>
           <span style="font-size: 10px; color: #a1a1aa;">v1.0</span>
         </div>
         <button class="ro-menu-btn" id="ro-skip-btn">
@@ -451,5 +441,5 @@
   if (document.body) initVipHub();
   else document.addEventListener("DOMContentLoaded", initVipHub, { once: true });
 
-  console.log("%c🎬 Motchill VIP & Cinema Pro Suite Active!", "color: #51f085; font-weight: bold;");
+  console.log("%c🎬 NangCuc TV VIP & Cinema Pro Suite Active!", "color: #f59e0b; font-weight: bold;");
 })();

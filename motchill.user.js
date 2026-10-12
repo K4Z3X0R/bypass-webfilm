@@ -1,31 +1,95 @@
 // ==UserScript==
-// @name         SubNhanh VIP & Cinema Pro Suite
+// @name         Motchill VIP & Cinema Pro Suite
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  Chặn 100% quảng cáo + Anti-AdBlock + M3U8 Stream Sniffer + 1-Click PotPlayer + Skip Intro 85s & HDR trên SubNhanh
+// @description  Chặn 100% quảng cáo + Anti-AdBlock + M3U8 Stream Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên Motchill
 // @author       ekaznyra
-// @match        *://*.subnhanh.org/*
-// @match        *://*.subnhanh.com/*
-// @match        *://*.subnhanh.vip/*
-// @match        *://*.subnhanh.online/*
-// @match        *://*.subnhanh.site/*
-// @match        *://*.subnhanhtv.ws/*
+// @match        *://*.phimmotchill.online/*
+// @match        *://*.motchill.online/*
+// @match        *://*.motchilltv.org/*
+// @match        *://*.motchilltv.com/*
+// @match        *://*.phimmotchill.com/*
+// @match        *://*.phimmotchill.run/*
+// @match        *://*.phimmotchill.me/*
+// @match        *://*.motchill.moe/*
+// @match        *://*.motchilli.com/*
+// @match        *://*.motchilli.vip/*
+// @match        *://*.streamc.xyz/*
+// @match        *://embed*.streamc.xyz/*
 // @allFrames    true
 // @run-at       document-start
 // @grant        none
 // @license      MIT
-// @icon         https://subnhanh.org/favicon.ico
+// @icon         https://phimmotchill.online/favicon.ico
 // @homepageURL  https://github.com/ekaznyra/bypass-rophim
-// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-subnhanh.user.js
-// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-subnhanh.user.js
+// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/motchill.user.js
+// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/motchill.user.js
 // ==/UserScript==
 
 (function () {
   "use strict";
 
-  const isEmbed = window.self !== window.top;
+  // ═══════════════════════════════════════════════════════════════
+  // ⚡ 1. IFRAME EMBED PLAYER GUARD KILLER & SNIFFER
+  // ═══════════════════════════════════════════════════════════════
+  const isEmbed =
+    window.self !== window.top ||
+    location.hostname.includes("streamc") ||
+    location.hostname.includes("embed");
 
   if (isEmbed) {
+    let activePlayer = null;
+    const dummyGuard = {
+      version: "guard-25",
+      status: () => ({ blocked: false, antiAdblock: false, action: "none" }),
+      ready: Promise.resolve(),
+      isBlocked: () => false,
+      reportAdResource: () => {},
+      waitForAccess: () => Promise.resolve(),
+      registerPlayer: (player) => {
+        activePlayer = player;
+        if (player && typeof player.play === "function") {
+          setTimeout(() => {
+            try { player.play(); } catch (e) {}
+          }, 300);
+        }
+      }
+    };
+
+    try {
+      Object.defineProperty(window, "streamGuard", {
+        value: dummyGuard,
+        writable: false,
+        configurable: false
+      });
+    } catch (e) {
+      window.streamGuard = dummyGuard;
+    }
+
+    try {
+      const origPause = HTMLMediaElement.prototype.pause;
+      HTMLMediaElement.prototype.pause = function () {
+        const stack = new Error().stack || "";
+        if (stack.includes("guard") || stack.includes("stopPlayback") || stack.includes("adError")) {
+          return;
+        }
+        return origPause.apply(this, arguments);
+      };
+    } catch (e) {}
+
+    const embedStyle = document.createElement("style");
+    embedStyle.textContent = `
+      #stream-guard, #stream-guard-card, .stream-guard, div[id*="stream-guard"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+      video.ro-enhanced-hdr {
+        filter: contrast(1.08) saturate(1.22) brightness(1.03) !important;
+      }
+    `;
+    (document.head || document.documentElement).appendChild(embedStyle);
+
     function notifyStream(url) {
       if (!url || typeof url !== "string") return;
       if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist")) {
@@ -59,26 +123,21 @@
       if (e.data.type === "RO_CMD_SKIP_INTRO") {
         const s = e.data.seconds || 85;
         if (video) video.currentTime = Math.min(video.duration || Infinity, video.currentTime + s);
+        else if (activePlayer?.seek) activePlayer.seek(activePlayer.getPosition() + s);
       } else if (e.data.type === "RO_CMD_SET_SPEED") {
         const speed = e.data.speed || 1;
         if (video) video.playbackRate = speed;
+        else if (activePlayer?.setPlaybackRate) activePlayer.setPlaybackRate(speed);
       } else if (e.data.type === "RO_CMD_TOGGLE_HDR") {
         if (video) video.classList.toggle("ro-enhanced-hdr");
       }
     });
 
-    const embedStyle = document.createElement("style");
-    embedStyle.textContent = `
-      video.ro-enhanced-hdr {
-        filter: contrast(1.08) saturate(1.22) brightness(1.03) !important;
-      }
-    `;
-    (document.head || document.documentElement).appendChild(embedStyle);
     return;
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // 🛡️ WEBSITE CHÍNH (SUBNHANH) - DIỆT QUẢNG CÁO & BẬT PRO SUITE
+  // 🛡️ 2. WEBSITE CHÍNH (MOTCHILL) - POPUP & BANNER ANNIHILATION
   // ═══════════════════════════════════════════════════════════════
 
   let capturedStreamUrl = "";
@@ -86,13 +145,14 @@
   let isHdrEnabled = false;
   let isTheaterMode = false;
 
+  // Chặn đứng window.open quảng cáo nhảy tab
   try {
     const origOpen = window.open;
     window.open = function (url) {
       if (typeof url === "string") {
-        const isSafe = url.startsWith("/") || url.includes("subnhanh") || url.includes("youtube.com");
+        const isSafe = url.startsWith("/") || url.includes("motchill") || url.includes("youtube.com");
         if (!isSafe) {
-          console.log("[SubNhanh Bypass] Đã chặn popup:", url);
+          console.log("[Motchill Bypass] Đã chặn popup:", url);
           return null;
         }
       }
@@ -100,14 +160,15 @@
     };
   } catch (e) {}
 
+  // Lắng nghe luồng Stream M3U8 từ Iframe
   window.addEventListener("message", function (event) {
     if (event.data && event.data.type === "RO_STREAM_FOUND") {
       capturedStreamUrl = event.data.streamUrl;
-      console.log("%c🎬 [SubNhanh Sniffer] M3U8 Found:", "color: #3b82f6;", capturedStreamUrl);
+      console.log("%c🎬 [Motchill Sniffer] M3U8 Found:", "color: #51f085;", capturedStreamUrl);
       const btn = document.getElementById("ro-potplayer-btn");
       if (btn) {
-        btn.style.borderColor = "#3b82f6";
-        btn.style.color = "#3b82f6";
+        btn.style.borderColor = "#51f085";
+        btn.style.color = "#51f085";
       }
     }
   });
@@ -118,9 +179,12 @@
     });
   }
 
+  // Tiêm CSS dọn sạch banner quảng cáo Motchill & mở rộng rạp phim
   const css = `
-    .ad-container, .ads-banner, div[class*="banner-ads"], div[id*="ad_"],
-    .adsbox, #chancoc, .modal-adblock, div[style*="z-index: 9999999"] {
+    /* Xóa sạch các vùng quảng cáo Motchill */
+    .ad-container, .ads-holder, .banner-left, .banner-right,
+    div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"],
+    .ads-wrapper, #chancoc, .modal-adblock {
       display: none !important;
       visibility: hidden !important;
       height: 0 !important;
@@ -142,14 +206,15 @@
     body.ro-theater-active footer:hover {
       opacity: 1 !important;
     }
-    body.ro-theater-active .player-box,
-    body.ro-theater-active #player,
-    body.ro-theater-active iframe {
+    body.ro-theater-active .player-wrapper,
+    body.ro-theater-active .player-container,
+    body.ro-theater-active iframe#embed-player {
       max-height: 88vh !important;
-      box-shadow: 0 10px 50px rgba(59, 130, 246, 0.3) !important;
+      box-shadow: 0 10px 50px rgba(81, 240, 133, 0.25) !important;
       border-radius: 14px;
     }
 
+    /* VIP Floating Control Hub */
     #ro-vip-hub {
       position: fixed;
       bottom: 24px;
@@ -161,12 +226,12 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 18px rgba(59, 130, 246, 0.45);
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
       cursor: pointer;
       font-size: 20px;
       border: 2px solid rgba(255, 255, 255, 0.3);
@@ -177,7 +242,7 @@
       bottom: 58px;
       right: 0;
       width: 290px;
-      background: rgba(18, 22, 32, 0.95);
+      background: rgba(18, 20, 26, 0.95);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
@@ -192,7 +257,7 @@
     .ro-menu-title {
       font-size: 13px;
       font-weight: 700;
-      color: #3b82f6;
+      color: #51f085;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -213,8 +278,8 @@
       cursor: pointer;
     }
     .ro-menu-btn:hover {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: #3b82f6;
+      background: rgba(81, 240, 133, 0.15);
+      border-color: #51f085;
       color: #fff;
     }
     .ro-badge {
@@ -229,10 +294,10 @@
       top: 30px;
       left: 50%;
       transform: translateX(-50%) translateY(-20px);
-      background: rgba(18, 22, 32, 0.92);
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(59, 130, 246, 0.4);
-      color: #3b82f6;
+      border: 1px solid rgba(81, 240, 133, 0.4);
+      color: #51f085;
       padding: 10px 22px;
       border-radius: 30px;
       font-size: 13px;
@@ -317,10 +382,10 @@
     const hub = document.createElement("div");
     hub.id = "ro-vip-hub";
     hub.innerHTML = `
-      <div id="ro-vip-hub-btn" title="SubNhanh VIP Hub">⚡</div>
+      <div id="ro-vip-hub-btn" title="Motchill VIP Control Hub">👑</div>
       <div id="ro-vip-menu">
         <div class="ro-menu-title">
-          <span>⚡ SUBNHANH PRO SUITE</span>
+          <span>🎬 MOTCHILL CINEMA PRO</span>
           <span style="font-size: 10px; color: #a1a1aa;">v1.0</span>
         </div>
         <button class="ro-menu-btn" id="ro-skip-btn">
@@ -386,5 +451,5 @@
   if (document.body) initVipHub();
   else document.addEventListener("DOMContentLoaded", initVipHub, { once: true });
 
-  console.log("%c🎬 SubNhanh VIP & Cinema Pro Suite Active!", "color: #3b82f6; font-weight: bold;");
+  console.log("%c🎬 Motchill VIP & Cinema Pro Suite Active!", "color: #51f085; font-weight: bold;");
 })();

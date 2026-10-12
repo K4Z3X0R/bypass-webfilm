@@ -52,11 +52,17 @@ Nếu trình duyệt của bạn chưa có Tampermonkey, hãy cài đặt extens
 
 | Trang Web | Trạng Thái | Link Cài Đặt 1-Click | Tên Miền Hỗ Trợ |
 | :--- | :---: | :---: | :--- |
-| 🎬 **Rổ Phim (Rophim)** | 🟢 Hoạt động | 👉 **[CÀI ĐẶT RỔ PHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/tampermonkey.user.js)** | `rophim1.vip`, `rophim1.cc`, `streamc.xyz`... |
-| 🍿 **Motchill** | 🟢 Hoạt động | 👉 **[CÀI ĐẶT MOTCHILL](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-motchill.user.js)** | `phimmotchill.online`, `motchill.online`, `motchilltv.com`... |
-| 🔥 **Nắng Cực TV** | 🟢 Hoạt động | 👉 **[CÀI ĐẶT NẮNG CỰC](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-nangcuc.user.js)** | `nangcuc.tv`, `nangcuc.net`, `nangcuctv.cc`... |
-| 🌸 **AnimeVietsub** | 🟢 Hoạt động | 👉 **[CÀI ĐẶT ANIMEVİETSUB](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-animevietsub.user.js)** | `animevietsub.moe`, `animevietsub.link`, `animevietsub.global`... |
-| ⚡ **SubNhanh** | 🟢 Hoạt động | 👉 **[CÀI ĐẶT SUBNHANH](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-subnhanh.user.js)** | `subnhanh.org`, `subnhanh.com`, `subnhanh.vip`... |
+| 🎬 **Rổ Phim (Rophim)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT RỔ PHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/rophim.user.js)** | `rophim1.vip`, `rophim1.cc`, `streamc.xyz`... |
+| 🍿 **Motchill** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT MOTCHILL](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/motchill.user.js)** | `phimmotchill.online`, `motchill.online`, `motchilltv.com`... |
+| 🔥 **Nắng Cực TV** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT NẮNG CỰC](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/nangcuc.user.js)** | `nangcuc.tv`, `nangcuc.net`, `nangcuctv.cc`... |
+| 🌸 **AnimeVietsub** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIMEVİETSUB](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/animevietsub.user.js)** | `animevietsub.moe`, `animevietsub.link`, `animevietsub.global`... |
+| ⚡ **SubNhanh** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT SUBNHANH](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/subnhanh.user.js)** | `subnhanh.org`, `subnhanh.com`, `subnhanh.vip`... |
+| 🎥 **PhimMoi / PhimMoiChill** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMMOI](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/phimmoi.user.js)** | `phimmoiyyy.net`, `phimmoichill.net`, `phimmoi.net`... |
+| 🐉 **Hoạt Hình 3D (Donghua)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT HOẠT HÌNH 3D](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/hoathinh3d.user.js)** | `hoathinh3d.biz`, `hoathinh3d.com`, `hoathinh3d.site`... |
+| 🏮 **Động Phim (DongPhim)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ĐỘNG PHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/dongphim.user.js)** | `dongphim.net`, `dongphym.net`, `dongphim.tv`... |
+| 🎙️ **TVHay (Thuyết Minh)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT TVHAY](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/tvhay.user.js)** | `tvhay.site`, `tvhay.org`, `tvhay.co`... |
+| 🍙 **AnimeHay & VuiGhe** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIMEHAY](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/animehay.user.js)** | `animehay.tv`, `animehay.live`, `vuighe.net`, `vuighe3.com`... |
+| 🎞️ **BiluTV** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT BILUTV](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bilutv.user.js)** | `bilutv.live`, `bilutva.com`, `bilutv.net`... |
 
 > 💡 **Mẹo**: Nhấp vào nút **Cài đặt** ở trên, Tampermonkey sẽ tự động phát hiện file `.user.js` và hiện bảng xác nhận. Nhấn **Install** (Cài đặt) hoặc **Update** (Cập nhật) là xong!
 

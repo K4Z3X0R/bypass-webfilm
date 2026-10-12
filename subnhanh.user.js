@@ -16,8 +16,8 @@
 // @license      MIT
 // @icon         https://subnhanh.org/favicon.ico
 // @homepageURL  https://github.com/ekaznyra/bypass-rophim
-// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-subnhanh.user.js
-// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bypass-subnhanh.user.js
+// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/subnhanh.user.js
+// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/subnhanh.user.js
 // ==/UserScript==
 
 (function () {
