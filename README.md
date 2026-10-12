@@ -52,7 +52,7 @@ Nếu trình duyệt của bạn chưa có Tampermonkey, hãy cài đặt extens
 
 | Trang Web | Trạng Thái | Link Cài Đặt 1-Click | Tên Miền Hỗ Trợ |
 | :--- | :---: | :---: | :--- |
-| 👑 **ALL-IN-ONE (Bản Gộp Toàn Bộ)** | 🌟 Khuyên Dùng | 👉 **[CÀI BẢN ALL-IN-ONE](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/cinema-pro-all.user.js)** | **Tất cả 11+ website bên dưới trong 1 script duy nhất!** |
+| 👑 **ALL-IN-ONE (Bản Gộp)** | 🌟 **Khuyên Dùng** | 👉 **[CÀI BẢN ALL-IN-ONE](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/cinema-pro-all.user.js)** | **Cài 1 lần chạy trên TOÀN BỘ 17+ web bên dưới!** |
 | 🎬 **Rổ Phim (Rophim)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT RỔ PHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/rophim.user.js)** | `rophim1.vip`, `rophim1.cc`, `streamc.xyz`... |
 | 🍿 **Motchill** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT MOTCHILL](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/motchill.user.js)** | `phimmotchill.online`, `motchill.online`, `motchilltv.com`... |
 | 🔥 **Nắng Cực TV** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT NẮNG CỰC](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/nangcuc.user.js)** | `nangcuc.tv`, `nangcuc.net`, `nangcuctv.cc`... |
@@ -64,6 +64,12 @@ Nếu trình duyệt của bạn chưa có Tampermonkey, hãy cài đặt extens
 | 🎙️ **TVHay (Thuyết Minh)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT TVHAY](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/tvhay.user.js)** | `tvhay.site`, `tvhay.org`, `tvhay.co`... |
 | 🍙 **AnimeHay & VuiGhe** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIMEHAY](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/animehay.user.js)** | `animehay.tv`, `animehay.live`, `vuighe.net`, `vuighe3.com`... |
 | 🎞️ **BiluTV** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT BILUTV](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/bilutv.user.js)** | `bilutv.live`, `bilutva.com`, `bilutv.net`... |
+| 📽️ **Phim1080** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIM1080](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/phim1080.user.js)** | `phim1080z.org`, `phim1080.net`, `phim1080.me`... |
+| 🎬 **XemPhim** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT XEMPHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/xemphim.user.js)** | `xemphim.tv`, `xemphim.in`, `xemphim.club`... |
+| ⛩️ **Anime47** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIME47](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/anime47.user.js)** | `anime47.net`, `anime47.com`, `anime47.tv`... |
+| 🌐 **OPhim & KKPhim** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT OPHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/ophim.user.js)** | `ophim.cc`, `ophim.live`, `kkphim.com`... |
+| 📺 **BiPhim & PhimChill** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT BIPHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/biphim.user.js)** | `biphim.net`, `biphim.co`, `phimchill.tv`... |
+| ⚔️ **DongHuaTV (Hoạt Hình TQ)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT DONGHUATV](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/donghuatv.user.js)** | `donghuatv.com`, `donghua.tv`... |
 
 > 💡 **Mẹo**: Nếu anh hay xem nhiều web khác nhau, chỉ cần cài duy nhất bản **ALL-IN-ONE** là xong! Hoặc chọn từng bản riêng lẻ nếu chỉ xem cố định một trang. Nhấp vào nút **Cài đặt** ở trên, Tampermonkey sẽ tự động phát hiện và hiện bảng xác nhận. Nhấn **Install** (Cài đặt) hoặc **Update** (Cập nhật) là hoàn tất!
 

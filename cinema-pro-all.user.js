@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cinema Pro Suite (All-In-One) - Kho Phim & Anime Việt Nam
 // @namespace    http://tampermonkey.net/
-// @version      3.5
+// @version      4.0
 // @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên Rổ Phim, Motchill, Nắng Cực, AnimeVietsub, PhimMoi, HoatHinh3D, Động Phim, TVHay, AnimeHay, BiluTV, SubNhanh!
 // @author       ekaznyra
 // @match        *://*.rophim1.vip/*
@@ -73,6 +73,28 @@
 // @match        *://*.bilutva.com/*
 // @match        *://*.bilutv.link/*
 // @match        *://*.bilutv.net/*
+// @match        *://*.phim1080z.org/*
+// @match        *://*.phim1080.net/*
+// @match        *://*.phim1080.me/*
+// @match        *://*.phim1080.vip/*
+// @match        *://*.phim1080.org/*
+// @match        *://*.xemphim.tv/*
+// @match        *://*.xemphim.in/*
+// @match        *://*.xemphim.club/*
+// @match        *://*.xemphim.fun/*
+// @match        *://*.xemphim.vip/*
+// @match        *://*.anime47.net/*
+// @match        *://*.anime47.com/*
+// @match        *://*.anime47.tv/*
+// @match        *://*.ophim.cc/*
+// @match        *://*.ophim.live/*
+// @match        *://*.kkphim.com/*
+// @match        *://*.biphim.net/*
+// @match        *://*.biphim.co/*
+// @match        *://*.phimchill.tv/*
+// @match        *://*.phimchill.net/*
+// @match        *://*.donghuatv.com/*
+// @match        *://*.donghua.tv/*
 // @match        *://*.streamc.xyz/*
 // @match        *://embed*.streamc.xyz/*
 // @match        *://*.stream*.xyz/*
