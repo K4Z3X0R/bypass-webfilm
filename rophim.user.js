@@ -62,10 +62,10 @@
 
   const isEmbedPlayer =
     window.self !== window.top ||
-    location.hostname.includes("streamc") ||
-    location.hostname.includes("embed") ||
-    location.hostname.includes("goatembed") ||
-    location.pathname.includes("embed");
+    (location.hostname || "").includes("streamc") ||
+    (location.hostname || "").includes("embed") ||
+    (location.hostname || "").includes("goatembed") ||
+    (location.pathname || "").includes("embed");
 
   // ═══════════════════════════════════════════════════════════════
   // ⚡ IFRAME EMBED PLAYER GUARD KILLER & STREAM SNIFFER
@@ -658,21 +658,28 @@
     `;
     document.body.appendChild(hub);
 
-    const hubBtn = document.getElementById("ro-vip-hub-btn");
-    const menu = document.getElementById("ro-vip-menu");
+    const hubBtn = hub.querySelector("#ro-vip-hub-btn") || document.getElementById("ro-vip-hub-btn");
+    const menu = hub.querySelector("#ro-vip-menu") || document.getElementById("ro-vip-menu");
 
-    hubBtn.addEventListener("click", () => menu.classList.toggle("active"));
-    document.addEventListener("click", (e) => {
-      if (!hub.contains(e.target)) menu.classList.remove("active");
-    });
+    if (hubBtn && menu) {
+      hubBtn.addEventListener("click", () => menu.classList.toggle("active"));
+      document.addEventListener("click", (e) => {
+        if (!hub.contains(e.target)) menu.classList.remove("active");
+      });
+    }
 
-    document.getElementById("ro-skip-btn").addEventListener("click", skipIntro);
-    document.getElementById("ro-hdr-btn").addEventListener("click", toggleHdr);
-    document.getElementById("ro-theater-btn").addEventListener("click", toggleTheaterMode);
-    document.getElementById("ro-potplayer-btn").addEventListener("click", openInPotPlayer);
-    document.getElementById("ro-copy-btn").addEventListener("click", copyM3u8);
-    document.getElementById("ro-speed-down").addEventListener("click", () => adjustSpeed(-1));
-    document.getElementById("ro-speed-up").addEventListener("click", () => adjustSpeed(1));
+    const bind = (id, fn) => {
+      const el = hub.querySelector("#" + id) || document.getElementById(id);
+      if (el) el.addEventListener("click", fn);
+    };
+
+    bind("ro-skip-btn", skipIntro);
+    bind("ro-hdr-btn", toggleHdr);
+    bind("ro-theater-btn", toggleTheaterMode);
+    bind("ro-potplayer-btn", openInPotPlayer);
+    bind("ro-copy-btn", copyM3u8);
+    bind("ro-speed-down", () => adjustSpeed(-1));
+    bind("ro-speed-up", () => adjustSpeed(1));
   }
 
   window.addEventListener("keydown", function (e) {
