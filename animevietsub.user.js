@@ -26,6 +26,45 @@
   const isEmbed = window.self !== window.top;
 
   if (isEmbed) {
+    let activePlayer = null;
+    const dummyGuard = {
+      version: "guard-25",
+      status: () => ({ blocked: false, antiAdblock: false, action: "none" }),
+      ready: Promise.resolve(),
+      isBlocked: () => false,
+      reportAdResource: () => {},
+      waitForAccess: () => Promise.resolve(),
+      registerPlayer: (player) => {
+        activePlayer = player;
+        if (player && typeof player.play === "function") {
+          setTimeout(() => {
+            try { player.play(); } catch (e) {}
+          }, 300);
+        }
+      }
+    };
+
+    try {
+      Object.defineProperty(window, "streamGuard", {
+        value: dummyGuard,
+        writable: false,
+        configurable: false
+      });
+    } catch (e) {
+      window.streamGuard = dummyGuard;
+    }
+
+    try {
+      const origPause = HTMLMediaElement.prototype.pause;
+      HTMLMediaElement.prototype.pause = function () {
+        const stack = new Error().stack || "";
+        if (stack.includes("guard") || stack.includes("stopPlayback") || stack.includes("adError")) {
+          return;
+        }
+        return origPause.apply(this, arguments);
+      };
+    } catch (e) {}
+
     function notifyStream(url) {
       if (!url || typeof url !== "string") return;
       if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist")) {
@@ -78,6 +117,11 @@
 
     const embedStyle = document.createElement("style");
     embedStyle.textContent = `
+      #stream-guard, #stream-guard-card, .stream-guard, div[id*="stream-guard"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
       video.ro-enhanced-hdr {
         filter: contrast(1.1) saturate(1.25) brightness(1.02) !important;
       }
