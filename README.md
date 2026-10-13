@@ -1,7 +1,7 @@
 # 🎬 Rophim VIP & Cinema Pro Suite - Ultimate Edition v4.5
 
 ![Version](https://img.shields.io/badge/Version-4.5_Cinema_Pro_Master-blue?style=for-the-badge&logo=javascript)
-![Tests](https://img.shields.io/badge/Tests-667%2F667_Passed-success?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-787%2F787_Passed-success?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-100%25_Production_Ready-brightgreen?style=for-the-badge)
 
 Bộ công cụ toàn diện số 1 Việt Nam: Mở khóa VIP vĩnh viễn, vô hạn Coin/TCoin, **triệt tiêu 100% AdBlock / Stream Guard**, tự động tóm link **M3U8 Stream mở bằng PotPlayer/VLC/Tải playlist .M3U**, bộ phím tắt thần thánh **Tua nhanh/lùi 5s, Skip Intro 85s, Chỉnh âm lượng, Toàn màn hình**, bộ lọc màu **Anime OLED HDR**, và chế độ **Rạp phim Theater Mode** trên **37+ website xem phim và anime hàng đầu Việt Nam**!
@@ -133,14 +133,15 @@ Nếu trình duyệt của bạn chưa có Tampermonkey, hãy cài đặt extens
 
 ## 🧪 Kiểm Định Chất Lượng Tự Động (Automated Test Suite)
 
-Dự án tích hợp bộ kiểm thử tự động [`run_audit.js`](file:///run_audit.js) với **667 Unit & Runtime Assertions** chạy qua Node.js VM Sandbox độc lập:
-- **Phase 1: Metadata & Syntax Inspection** (39 files): Kiểm tra cú pháp ES2022, headers `@name`, `@match`, `@downloadURL`, `@updateURL`, `@allFrames`, `@run-at`.
-- **Phase 2: Top Window DOM & Runtime Simulation** (39 files): Kiểm thử khởi tạo Floating VIP Hub `#ro-vip-hub`, triệt tiêu `window.open` popup ad trap, phản hồi bắt tay `stream-guard-hello` (`hasAdblock: false, key: 'ok'`), kiểm soát trực tiếp `<video>` trong `sendCommandToPlayer`, hook `fetch` & `XMLHttpRequest` bắt link M3U8, và điều phối 14 phím tắt Pro (`S`, `I`, `Arrows`, `F`, `E`, `T`, `[`, `]`, `Space`, `M`, `0`-`9`).
-- **Phase 3: Iframe Player Embed & Stream Guard Defusal** (39 files): Giả lập iframe embed player, kiểm tra defuse `window.streamGuard` (`isBlocked() === false`), vô hiệu hóa `HTMLMediaElement.prototype.pause` do Guard kích hoạt, tự động skip đếm ngược quảng cáo video pre-roll, truyền lệnh điều khiển từ xa (SEEK, VOLUME, FULLSCREEN) và cầu nối `postMessage` M3U8 Stream Sniffer về trang cha.
-- **Phase 4: Rophim VIP 2099 & Coin Backend Response Patcher** (`rophim.user.js`, `tampermonkey.user.js`, `cinema-pro-all.user.js`): Xác thực can thiệp API backend `/baseapi/api/v1/tcoin/me` (1 tỷ Coin) và `/api/auth/session` (VIP đến năm 2099).
+Dự án tích hợp bộ kiểm thử tự động [`run_audit.js`](file:///run_audit.js) với **787 Unit & Runtime Assertions** chạy qua Node.js VM Sandbox độc lập:
+- **Phase 1: Metadata & Syntax Inspection** (39 `.user.js` + `core.js`): Kiểm tra cú pháp ES2022, headers `@name`, `@match`, `@downloadURL`, `@updateURL`, `@allFrames`, `@run-at`.
+- **Phase 2: Top Window DOM, VIP Hub Interactive Buttons & Hotkeys** (39 files): Kiểm thử khởi tạo Floating VIP Hub `#ro-vip-hub` cùng 12 nút bấm điều khiển (PotPlayer, VLC, Copy M3U8, Tải `.m3u`, Skip Intro, Fullscreen, HDR, Theater, Volume, Speed), triệt tiêu `window.open` ad trap, chặn `Storage.prototype.setItem` adblock probe, phản hồi `stream-guard-hello`, và 14 phím tắt Pro.
+- **Phase 3: Iframe Player Embed & Stream Guard Defusal** (39 files): Giả lập iframe embed player, kiểm tra defuse `window.streamGuard` (`isBlocked() === false`), tự động tua quảng cáo pre-roll & click `.jw-skip`, vô hiệu hóa `HTMLMediaElement.prototype.pause` do Guard kích hoạt, truyền lệnh điều khiển từ xa (SEEK, VOLUME, SPEED, HDR, FULLSCREEN) và cầu nối `postMessage` M3U8 Stream Sniffer.
+- **Phase 4: Rophim VIP 2099 & Coin Backend Response Patcher** (`rophim.user.js`, `tampermonkey.user.js`, `cinema-pro-all.user.js`): Xác thực can thiệp API `/baseapi/api/v1/tcoin/me` (1 tỷ Coin), `/api/auth/session` (VIP đến năm 2099) và đệ quy nested JSON payload (`/vip/check`).
+- **Phase 5: README.md 1-Click Install Links Sync** (38 links): Kiểm toán 100% đường dẫn cài đặt 1-Click khớp với các tệp script thực tế.
 
 Chạy kiểm định toàn bộ hệ thống:
 ```bash
 node run_audit.js
 ```
-*(Kết quả: 667/667 Assertions Passed - Health Score: 100.0%)*
+*(Kết quả: 787/787 Assertions Passed - Health Score: 100.0%)*

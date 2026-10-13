@@ -10,8 +10,9 @@ const scriptFiles = fs.readdirSync(".")
   .filter(f => f.endsWith(".user.js"))
   .sort();
 
-console.log(`Discovered ${scriptFiles.length} UserScripts to audit:`);
+console.log(`Discovered ${scriptFiles.length} UserScripts + core.js to audit:`);
 scriptFiles.forEach((f, i) => console.log(`  [${String(i + 1).padStart(2, "0")}] ${f}`));
+console.log(`  [${String(scriptFiles.length + 1).padStart(2, "0")}] core.js`);
 console.log("\n----------------------------------------------------------------");
 
 let totalTests = 0;
@@ -30,9 +31,9 @@ function report(testName, passed, details = "") {
 }
 
 // ═════════════════════════════════════════════════════════════════
-// 1. SYNTAX & METADATA AUDIT
+// 1. SYNTAX & METADATA AUDIT (39 UserScripts + core.js)
 // ═════════════════════════════════════════════════════════════════
-console.log("\n📋 PHASE 1: Tampermonkey Metadata & Syntax Integrity");
+console.log("\n📋 PHASE 1: Tampermonkey Metadata & ES2022 Syntax Integrity");
 
 scriptFiles.forEach(file => {
   const content = fs.readFileSync(file, "utf8");
@@ -71,10 +72,22 @@ scriptFiles.forEach(file => {
   report(`${file}: document-start & allFrames enabled`, hasRunAt && hasAllFrames);
 });
 
+// Check core.js syntax
+if (fs.existsSync("core.js")) {
+  const coreContent = fs.readFileSync("core.js", "utf8");
+  let coreValid = true;
+  try {
+    new vm.Script(coreContent, { filename: "core.js" });
+  } catch (e) {
+    coreValid = false;
+  }
+  report("core.js: Pure JS Engine ES2022 Syntax Valid", coreValid);
+}
+
 // ═════════════════════════════════════════════════════════════════
-// 2. TOP WINDOW DOM & RUNTIME SIMULATION
+// 2. TOP WINDOW DOM, VIP HUB BUTTONS & RUNTIME SIMULATION
 // ═════════════════════════════════════════════════════════════════
-console.log("\n🖥️ PHASE 2: Top Window DOM & Runtime Simulation");
+console.log("\n🖥️ PHASE 2: Top Window DOM, VIP Hub Interactive Buttons & Hotkeys");
 
 class MockElement {
   constructor(tagName) {
@@ -102,25 +115,57 @@ class MockElement {
       contains: (c) => this.classList._classes.has(c)
     };
     this.children = [];
-    this.innerHTML = "";
+    this._innerHTML = "";
+    this._idMap = {};
     this.style = {};
     this.attributes = {};
     this.listeners = {};
+    this.onclick = null;
     this.playbackRate = 1.0;
     this.currentTime = 0;
     this.duration = 1000;
     this.paused = true;
     this.muted = false;
     this.volume = 1.0;
+    this.href = "";
+    this.download = "";
+  }
+
+  get innerHTML() {
+    return this._innerHTML;
+  }
+
+  set innerHTML(val) {
+    this._innerHTML = String(val);
+    const idRegex = /id=["']([^"']+)["']/g;
+    let match;
+    while ((match = idRegex.exec(this._innerHTML)) !== null) {
+      const id = match[1];
+      if (!this._idMap[id]) {
+        const child = new MockElement("BUTTON");
+        child.id = id;
+        this._idMap[id] = child;
+        this.children.push(child);
+      }
+    }
   }
 
   appendChild(el) {
     this.children.push(el);
+    if (el && el.id) this._idMap[el.id] = el;
     return el;
   }
 
   remove() {
     return this;
+  }
+
+  click() {
+    const ev = { stopPropagation: () => {}, preventDefault: () => {} };
+    if (typeof this.onclick === "function") this.onclick(ev);
+    if (this.listeners["click"]) {
+      this.listeners["click"].forEach(fn => fn(ev));
+    }
   }
 
   setAttribute(k, v) { this.attributes[k] = v; }
@@ -135,6 +180,7 @@ class MockElement {
     if (sel.startsWith("#")) {
       const id = sel.slice(1);
       if (this.id === id) return this;
+      if (this._idMap[id]) return this._idMap[id];
       for (const ch of this.children) {
         if (ch.id === id) return ch;
         if (ch.querySelector) {
@@ -167,6 +213,8 @@ function createTopWindowMock(hostname = "rophim1.vip") {
   const listeners = {};
   let handshakeReply = null;
   let openedPopup = null;
+  let copiedText = "";
+  let createdBlobUrl = false;
 
   const documentMock = {
     body,
@@ -176,17 +224,19 @@ function createTopWindowMock(hostname = "rophim1.vip") {
     exitFullscreen: () => Promise.resolve(),
     createElement: (tag) => new MockElement(tag),
     getElementById: (id) => {
-      if (id === "ro-vip-hub") {
-        return body.children.find(c => c.id === "ro-vip-hub") || null;
+      for (const ch of body.children) {
+        if (ch.id === id) return ch;
+        if (ch.querySelector) {
+          const found = ch.querySelector("#" + id);
+          if (found) return found;
+        }
       }
       return null;
     },
     querySelector: (sel) => {
-      if (sel === "video") return videoElem;
+      if (sel === "video" || sel.includes("video")) return videoElem;
       if (sel.startsWith("#")) {
-        const id = sel.slice(1);
-        if (body.id === id) return body;
-        return body.children.find(c => c.id === id) || null;
+        return documentMock.getElementById(sel.slice(1));
       }
       return null;
     },
@@ -219,7 +269,7 @@ function createTopWindowMock(hostname = "rophim1.vip") {
     postMessage: () => {},
     navigator: {
       clipboard: {
-        writeText: async (t) => true
+        writeText: async (t) => { copiedText = t; return true; }
       }
     },
     Blob: class Blob {
@@ -229,7 +279,7 @@ function createTopWindowMock(hostname = "rophim1.vip") {
       }
     },
     URL: {
-      createObjectURL: () => "blob:mock-url",
+      createObjectURL: () => { createdBlobUrl = true; return "blob:mock-url"; },
       revokeObjectURL: () => {}
     },
     localStorage: {
@@ -253,11 +303,11 @@ function createTopWindowMock(hostname = "rophim1.vip") {
     },
     setTimeout: (fn) => setTimeout(fn, 0),
     clearTimeout: (id) => clearTimeout(id),
-    setInterval: (fn) => setInterval(fn, 1000),
-    clearInterval: (id) => clearInterval(id),
+    setInterval: (fn) => 1,
+    clearInterval: (id) => {},
     console: { log: () => {}, warn: () => {}, error: () => {} },
     HTMLMediaElement: { prototype: { pause: function () {} } },
-    Storage: { prototype: { setItem: function (k, v) {} } }
+    Storage: { prototype: { setItem: function (k, v) { this[k] = v; } } }
   };
 
   windowMock.window = windowMock;
@@ -270,14 +320,14 @@ function createTopWindowMock(hostname = "rophim1.vip") {
     listeners,
     body,
     videoElem,
-    getHandshakeReply: () => handshakeReply,
-    setHandshakeReply: (r) => { handshakeReply = r; }
+    getCopiedText: () => copiedText,
+    getCreatedBlobUrl: () => createdBlobUrl
   };
 }
 
 scriptFiles.forEach(file => {
   const code = fs.readFileSync(file, "utf8");
-  const { window, document, listeners, body, videoElem, setHandshakeReply } = createTopWindowMock();
+  const { window, document, listeners, body, videoElem, getCopiedText, getCreatedBlobUrl } = createTopWindowMock();
 
   const ctx = vm.createContext({
     window,
@@ -313,15 +363,30 @@ scriptFiles.forEach(file => {
     vm.runInContext(code, ctx);
     report(`${file}: Top Window executed without runtime exceptions`, true);
 
-    // Test 2.1: Floating VIP Hub Injection
-    const hasHub = body.children.some(c => c.id === "ro-vip-hub");
-    report(`${file}: Floating VIP Hub (#ro-vip-hub) successfully injected`, hasHub);
+    // Test 2.1: Floating VIP Hub Injection & All 12 Interactive Buttons Present
+    const hub = document.getElementById("ro-vip-hub");
+    const allBtnIds = [
+      "ro-potplayer-btn", "ro-vlc-btn", "ro-copym3u8-btn", "ro-m3ufile-btn",
+      "ro-skipintro-btn", "ro-fullscreen-btn", "ro-hdr-btn", "ro-theater-btn",
+      "ro-vol-down", "ro-vol-up", "ro-speed-down", "ro-speed-up"
+    ];
+    const allBtnsExist = Boolean(hub && allBtnIds.every(id => document.getElementById(id) !== null));
+    report(`${file}: VIP Hub (#ro-vip-hub) & all 12 Control Buttons bound`, allBtnsExist);
 
-    // Test 2.2: Ad popup neutralization
-    const popupRes = window.open("https://bad-popup-ads.xyz/click");
-    report(`${file}: Ad Popunder/Window.open trap neutralizer`, popupRes === null);
+    // Test 2.2: Ad popup neutralization + Legitimate URL allowed
+    const blockedAd = window.open("https://bad-popup-ads.xyz/click");
+    const allowedSafe = window.open("https://rophim1.vip/phim/tap-2");
+    report(`${file}: Window.open Ad Trap blocked & Safe URL allowed`, blockedAd === null && allowedSafe !== null);
 
-    // Test 2.3: stream-guard-hello handshake reply
+    // Test 2.3: Storage.prototype.setItem blocks probe_until & adblock_detected
+    const storeTest = {};
+    window.Storage.prototype.setItem.call(storeTest, "probe_until", "12345");
+    window.Storage.prototype.setItem.call(storeTest, "adblock_detected", "true");
+    window.Storage.prototype.setItem.call(storeTest, "normal_key", "ok");
+    const storageGuardOk = !("probe_until" in storeTest) && !("adblock_detected" in storeTest) && storeTest.normal_key === "ok";
+    report(`${file}: Storage.prototype.setItem blocks adblock probes`, storageGuardOk);
+
+    // Test 2.4: stream-guard-hello handshake reply
     let handshakeReceived = false;
     if (listeners["message"]) {
       listeners["message"].forEach(cb => {
@@ -339,11 +404,21 @@ scriptFiles.forEach(file => {
     }
     report(`${file}: stream-guard-hello Handshake replied {hasAdblock: false, key: 'ok'}`, handshakeReceived);
 
-    // Test 2.4: Top-window fetch stream sniffer
-    window.fetch("https://storage.cdn.com/stream/index.m3u8");
-    report(`${file}: Top Window fetch hooked for M3U8 stream sniffer`, true);
+    // Test 2.5: Top-window fetch & XHR stream sniffer + Button clicks (PotPlayer, VLC, Copy, .M3U Download)
+    const testStream = "https://storage.cdn.com/stream/index.m3u8";
+    window.fetch(testStream);
+    document.getElementById("ro-potplayer-btn").click();
+    const potLaunched = window.location.href === `potplayer://${testStream}`;
+    document.getElementById("ro-vlc-btn").click();
+    const vlcLaunched = window.location.href === `vlc://${testStream}`;
+    document.getElementById("ro-copym3u8-btn").click();
+    document.getElementById("ro-m3ufile-btn").click();
+    report(
+      `${file}: Stream Sniffer + PotPlayer/VLC/Copy/.M3U Button Clicks verified`,
+      potLaunched && vlcLaunched && getCopiedText() === testStream && getCreatedBlobUrl()
+    );
 
-    // Test 2.5: Direct video element control & Hotkeys (Expanded: S, I, Arrows, F, E, T, [, ], Space, M, 0-9)
+    // Test 2.6: All 14 Cinema Pro Hotkeys (S, I, Arrows, F, E, T, [, ], Space, M, 0-9)
     let hotkeysPassed = true;
     if (listeners["keydown"]) {
       try {
@@ -367,7 +442,11 @@ scriptFiles.forEach(file => {
         hotkeysPassed = false;
       }
     }
-    report(`${file}: Cinema Pro 14 Hotkeys (S, I, Arrows, F, E, T, [, ], Space, M, 0-9) fired safely`, hotkeysPassed);
+    const videoControlled =
+      videoElem.currentTime === 500 && // '5' key jumped to 50% of 1000s
+      videoElem.classList.contains("ro-enhanced-hdr") &&
+      body.classList.contains("ro-theater-active");
+    report(`${file}: 14 Hotkeys & Direct Video DOM Mutation verified`, hotkeysPassed && videoControlled);
 
   } catch (err) {
     report(`${file}: Top Window execution error`, false, err.stack);
@@ -381,15 +460,21 @@ console.log("\n🎬 PHASE 3: Iframe Player Embed & Stream Guard Defusal Simulati
 
 function createIframeMock() {
   const listeners = {};
+  const intervals = [];
   let postedMessage = null;
+  let skipClicked = false;
 
   const mockVideo = new MockElement("VIDEO");
-  mockVideo.duration = 45; // pre-roll ad duration
+  mockVideo.duration = 45; // pre-roll ad duration (< 120s)
   mockVideo.currentTime = 5;
   mockVideo.volume = 1.0;
 
   const mockAdNotice = new MockElement("DIV");
   mockAdNotice.className = "jw-ad-notice jw-ad-countdown";
+
+  const mockSkipBtn = new MockElement("BUTTON");
+  mockSkipBtn.className = "jw-skip";
+  mockSkipBtn.click = () => { skipClicked = true; };
 
   const documentMock = {
     head: new MockElement("HEAD"),
@@ -401,6 +486,7 @@ function createIframeMock() {
     querySelector: (sel) => {
       if (sel === "video") return mockVideo;
       if (sel.includes("ad-notice") || sel.includes("ad-countdown")) return mockAdNotice;
+      if (sel.includes("jw-skip") || sel.includes("skip")) return mockSkipBtn;
       return null;
     },
     querySelectorAll: (sel) => [],
@@ -435,8 +521,8 @@ function createIframeMock() {
     console: { log: () => {}, warn: () => {}, error: () => {} },
     setTimeout: (fn) => setTimeout(fn, 0),
     clearTimeout: (id) => clearTimeout(id),
-    setInterval: (fn) => setInterval(fn, 1000),
-    clearInterval: (id) => clearInterval(id),
+    setInterval: (fn) => { intervals.push(fn); return intervals.length; },
+    clearInterval: (id) => {},
     HTMLMediaElement: {
       prototype: {
         pause: function () { this.paused = true; }
@@ -446,12 +532,20 @@ function createIframeMock() {
   windowMock.window = windowMock;
   windowMock.self = windowMock;
 
-  return { window: windowMock, document: documentMock, listeners, mockVideo, getPosted: () => postedMessage };
+  return {
+    window: windowMock,
+    document: documentMock,
+    listeners,
+    intervals,
+    mockVideo,
+    getPosted: () => postedMessage,
+    getSkipClicked: () => skipClicked
+  };
 }
 
 scriptFiles.forEach(file => {
   const code = fs.readFileSync(file, "utf8");
-  const { window, document, listeners, mockVideo, getPosted } = createIframeMock();
+  const { window, document, listeners, intervals, mockVideo, getPosted, getSkipClicked } = createIframeMock();
 
   const ctx = vm.createContext({
     window,
@@ -485,32 +579,46 @@ scriptFiles.forEach(file => {
     );
     report(`${file}: Stream Guard defused (window.streamGuard.isBlocked === false)`, hasGuardDefused);
 
-    // Test 3.2: HTMLMediaElement.prototype.pause hook
+    // Test 3.2: Pre-roll Ad Auto-Skip & Skip Button Auto-Clicker
+    intervals.forEach(fn => fn());
+    const adSkipped = mockVideo.currentTime === 45 && getSkipClicked() === true;
+    report(`${file}: Pre-roll Ad Auto-Skipper & .jw-skip Auto-Clicker verified`, adSkipped);
+
+    // Test 3.3: HTMLMediaElement.prototype.pause hook
     const pauseCode = window.HTMLMediaElement.prototype.pause.toString();
     const pauseGuardActive = pauseCode.includes("guard") || pauseCode.includes("stopPlayback");
     report(`${file}: HTMLMediaElement.prototype.pause guard neutralizer active`, pauseGuardActive);
 
-    // Test 3.3: M3U8 Stream sniffer & bridge
+    // Test 3.4: M3U8 Stream sniffer & bridge
     window.fetch("https://storage.streamc.xyz/hls/master.m3u8");
     const posted = getPosted();
     const snifferPassed = Boolean(posted && posted.type === "RO_STREAM_FOUND" && posted.streamUrl.includes(".m3u8"));
     report(`${file}: M3U8 Stream Sniffer hooked fetch & posted to parent`, snifferPassed);
 
-    // Test 3.4: Player remote command handling (seek, volume, fullscreen)
+    // Test 3.5: Player remote command handling (SKIP_INTRO, SEEK, VOLUME, SPEED, HDR, FULLSCREEN, SEEK_PERCENT)
     let commandPassed = true;
+    mockVideo.duration = 1000;
+    mockVideo.currentTime = 100;
     if (listeners["message"]) {
       try {
         listeners["message"].forEach(cb => {
-          cb({ data: { type: "RO_CMD_SEEK", delta: 5 } });
-          cb({ data: { type: "RO_CMD_VOLUME", volume: 0.8 } });
+          cb({ data: { type: "RO_CMD_SKIP_INTRO", seconds: 85 } });
+          cb({ data: { type: "RO_CMD_SEEK", delta: 15 } });
+          cb({ data: { type: "RO_CMD_VOLUME", volume: 0.75 } });
+          cb({ data: { type: "RO_CMD_SET_SPEED", speed: 1.5 } });
+          cb({ data: { type: "RO_CMD_TOGGLE_HDR" } });
           cb({ data: { type: "RO_CMD_FULLSCREEN" } });
-          cb({ data: { type: "RO_CMD_SEEK_PERCENT", percent: 50 } });
         });
       } catch (err) {
         commandPassed = false;
       }
     }
-    report(`${file}: Iframe Remote Commands (SEEK, VOLUME, FULLSCREEN) processed`, commandPassed);
+    const stateMutated =
+      mockVideo.currentTime === 200 &&
+      mockVideo.volume === 0.75 &&
+      mockVideo.playbackRate === 1.5 &&
+      mockVideo.classList.contains("ro-enhanced-hdr");
+    report(`${file}: Iframe Remote Commands mutated video state accurately`, commandPassed && stateMutated);
 
   } catch (err) {
     report(`${file}: Iframe Context execution`, false, err.stack);
@@ -518,9 +626,9 @@ scriptFiles.forEach(file => {
 });
 
 // ═════════════════════════════════════════════════════════════════
-// 4. ROPHIM VIP 2099 & COIN RESPONSE PATCHER AUDIT
+// 4. ROPHIM VIP 2099 & COIN RESPONSE PATCHER AUDIT (FETCH + XHR)
 // ═════════════════════════════════════════════════════════════════
-console.log("\n👑 PHASE 4: Rophim VIP 2099 & Coin Backend Patcher Audit");
+console.log("\n👑 PHASE 4: Rophim VIP 2099 & Coin Backend Patcher Audit (Fetch & XHR)");
 
 const rophimScripts = ["rophim.user.js", "tampermonkey.user.js", "cinema-pro-all.user.js"];
 rophimScripts.forEach(file => {
@@ -542,6 +650,14 @@ rophimScripts.forEach(file => {
         headers: { get: () => "application/json" },
         clone: () => ({ json: async () => ({ user: { is_vip: false, role: "USER" } }) }),
         json: async () => ({ user: { is_vip: false, role: "USER" } })
+      };
+    }
+    if (url.includes("/baseapi/api/v1/vip/check")) {
+      return {
+        status: 200,
+        headers: { get: () => "application/json" },
+        clone: () => ({ json: async () => ({ data: { result: { is_vip: false, coin_balance: 0 } } }) }),
+        json: async () => ({ data: { result: { is_vip: false, coin_balance: 0 } } })
       };
     }
     return {
@@ -569,6 +685,8 @@ rophimScripts.forEach(file => {
     console: window.console,
     HTMLMediaElement: window.HTMLMediaElement,
     Storage: window.Storage,
+    Blob: window.Blob,
+    URL: window.URL,
     Promise,
     Response: class {
       constructor(body, init) {
@@ -585,7 +703,7 @@ rophimScripts.forEach(file => {
 
     // Test 4.1: /tcoin/me balance patch
     ctx.window.fetch("/baseapi/api/v1/tcoin/me").then(res => res.json()).then(data => {
-      const coinPassed = data && data.thungBalance === 999999999;
+      const coinPassed = data && data.thungBalance === 999999999 && data.coin_balance === 999999999;
       report(`${file}: /tcoin/me patched to 999,999,999 Coin`, coinPassed);
     });
 
@@ -595,9 +713,28 @@ rophimScripts.forEach(file => {
       report(`${file}: /api/auth/session patched to VIP 2099`, vipPassed);
     });
 
+    // Test 4.3: Deep nested recursive VIP payload patch
+    ctx.window.fetch("/baseapi/api/v1/vip/check").then(res => res.json()).then(data => {
+      const nestedPassed = data?.data?.result?.is_vip === true && data?.data?.result?.coin_balance === 999999999;
+      report(`${file}: Recursive nested /vip/check payload patched to VIP 2099`, nestedPassed);
+    });
+
   } catch (err) {
     report(`${file}: VIP Patcher execution`, false, err.stack);
   }
+});
+
+// ═════════════════════════════════════════════════════════════════
+// 5. README.MD 1-CLICK INSTALL LINK & DOCUMENTATION SYNC AUDIT
+// ═════════════════════════════════════════════════════════════════
+console.log("\n📖 PHASE 5: README.md 1-Click Install Links & Documentation Sync");
+
+const readmeContent = fs.readFileSync("README.md", "utf8");
+scriptFiles.forEach(file => {
+  if (file === "tampermonkey.user.js") return; // legacy alias
+  const rawLink = `https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/${file}`;
+  const inReadme = readmeContent.includes(rawLink);
+  report(`README.md: Contains 1-Click Install Link for ${file}`, inReadme, `Missing link: ${rawLink}`);
 });
 
 // Final check after promise tick
