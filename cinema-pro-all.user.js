@@ -2,7 +2,7 @@
 // @name         Cinema Pro Suite (All-In-One) - Kho Phim & Anime Việt Nam
 // @namespace    http://tampermonkey.net/
 // @version      4.5
-// @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên Rổ Phim, Motchill, Nắng Cực, AnimeVietsub, PhimMoi, HoatHinh3D, Động Phim, TVHay, AnimeHay, BiluTV, SubNhanh, Mọt Phim, Mê Phim, Ghiền Phim, FullPhim, PhimHay!
+// @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên hơn 35+ website phim, anime, hoạt hình 3D Việt Nam!
 // @author       ekaznyra
 // @match        *://rophim1.vip/*
 // @match        *://www.rophim1.vip/*
@@ -132,6 +132,32 @@
 // @match        *://*.phimhay.co/*
 // @match        *://*.phimhay.net/*
 // @match        *://*.phimhay.tv/*
+// @match        *://*.animetvn.com/*
+// @match        *://*.animetvn.tv/*
+// @match        *://*.animetvn.net/*
+// @match        *://*.hhkungfu.tv/*
+// @match        *://*.hhkungfu.com/*
+// @match        *://*.hhkungfu.net/*
+// @match        *://*.hhpanda.com/*
+// @match        *://*.hhpanda.tv/*
+// @match        *://*.vietsubtv.org/*
+// @match        *://*.vietsubtv.com/*
+// @match        *://*.vietsubtv.net/*
+// @match        *://*.phim247.tv/*
+// @match        *://*.phim247.vip/*
+// @match        *://*.phimhd.com/*
+// @match        *://*.phimhd.tv/*
+// @match        *://*.phimbathu.com/*
+// @match        *://*.phimbathu.net/*
+// @match        *://*.phimvang.com/*
+// @match        *://*.phimvang.tv/*
+// @match        *://*.banhtv.net/*
+// @match        *://*.banhtv.cc/*
+// @match        *://*.hdonline.co/*
+// @match        *://*.hdonline.tv/*
+// @match        *://*.chillhay.com/*
+// @match        *://*.chillhay.tv/*
+// @match        *://*.xemphimplus.net/*
 // @match        *://*.streamc.xyz/*
 // @match        *://embed*.streamc.xyz/*
 // @match        *://*.stream*.xyz/*
@@ -144,6 +170,10 @@
 // @match        *://*.emturbovid.com/*
 // @match        *://*.streamtape.com/*
 // @match        *://*.doodstream.com/*
+// @match        *://*.nguonc.com/*
+// @match        *://*.phimapi.com/*
+// @match        *://api.nguonc.com/*
+// @match        *://player.phimapi.com/*
 // @allFrames    true
 // @run-at       document-start
 // @grant        none
@@ -337,6 +367,19 @@
           url.includes("ghienphim") ||
           url.includes("fullphim") ||
           url.includes("phimhay") ||
+          url.includes("vuighe") ||
+          url.includes("animetvn") ||
+          url.includes("hhkungfu") ||
+          url.includes("hhpanda") ||
+          url.includes("vietsubtv") ||
+          url.includes("phim247") ||
+          url.includes("phimhd") ||
+          url.includes("phimbathu") ||
+          url.includes("phimvang") ||
+          url.includes("banhtv") ||
+          url.includes("hdonline") ||
+          url.includes("chillhay") ||
+          url.includes("xemphimplus") ||
           url.includes("youtube.com") ||
           url.includes("youtu.be");
         if (!isSafe) {
@@ -453,6 +496,8 @@
     .hh3d-ads, .dp-ads, .tvhay-ads, .ah-ads, #box-ads, .ah-banner,
     .bl-ads, .a47-ads, .ophim-ads, .biphim-ads, .dhtv-ads,
     .motphim-ads, .mephim-ads, .ghienphim-ads, .fullphim-ads, .phimhay-ads,
+    .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
+    .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads,
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
     div[style*="zIndex: 9999999"], div[style*="backdrop-filter: blur(25px)"] {
       display: none !important;

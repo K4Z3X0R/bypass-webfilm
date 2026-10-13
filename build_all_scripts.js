@@ -22,7 +22,11 @@ const COMMON_EMBED_MATCHES = [
   "*://*.goatembed.com/*",
   "*://*.emturbovid.com/*",
   "*://*.streamtape.com/*",
-  "*://*.doodstream.com/*"
+  "*://*.doodstream.com/*",
+  "*://*.nguonc.com/*",
+  "*://*.phimapi.com/*",
+  "*://api.nguonc.com/*",
+  "*://player.phimapi.com/*"
 ];
 
 const SITE_DEFINITIONS = [
@@ -323,6 +327,123 @@ const SITE_DEFINITIONS = [
       "*://*.phimhay.tv/*"
     ],
     siteCss: `.ad-container, .ads-holder, .banner-left, .banner-right, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .phimhay-ads`
+  },
+  {
+    id: "vuighe",
+    name: "VuiGhe VIP & Cinema Pro Suite",
+    file: "vuighe.user.js",
+    desc: "Chặn 100% quảng cáo VuiGhe Anime + Tóm link M3U8 PotPlayer + Skip Intro 85s + Anime OLED HDR rực rỡ",
+    version: "3.6",
+    domains: ["*://*.vuighe.net/*", "*://*.vuighe3.com/*", "*://*.vuighe.com/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .ah-ads, #box-ads, .ah-banner`
+  },
+  {
+    id: "animetvn",
+    name: "AnimeTVN VIP & Cinema Pro Suite",
+    file: "animetvn.user.js",
+    desc: "Chặn quảng cáo AnimeTVN + Vô hiệu hóa Stream Guard + Bắt link M3U8 PotPlayer + Skip Intro 85s + Anime OLED HDR",
+    version: "3.6",
+    domains: ["*://*.animetvn.com/*", "*://*.animetvn.tv/*", "*://*.animetvn.net/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .atvn-ads`
+  },
+  {
+    id: "hhkungfu",
+    name: "HoatHinh KungFu VIP & Cinema Pro Suite",
+    file: "hhkungfu.user.js",
+    desc: "Diệt sạch quảng cáo Hoạt Hình Kungfu Donghua 3D + Sniff M3U8 PotPlayer + Tua Intro 85s + Anime OLED HDR",
+    version: "3.6",
+    domains: ["*://*.hhkungfu.tv/*", "*://*.hhkungfu.com/*", "*://*.hhkungfu.net/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .hhkf-ads`
+  },
+  {
+    id: "hhpanda",
+    name: "HoatHinh Panda VIP & Cinema Pro Suite",
+    file: "hhpanda.user.js",
+    desc: "Chặn quảng cáo Hoạt Hình Panda Donghua 3D + Tóm link M3U8 PotPlayer + Tua Intro 85s + OLED HDR",
+    version: "3.6",
+    domains: ["*://*.hhpanda.com/*", "*://*.hhpanda.tv/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .hhpanda-ads`
+  },
+  {
+    id: "vietsubtv",
+    name: "VietSubTV VIP & Cinema Pro Suite",
+    file: "vietsubtv.user.js",
+    desc: "Chặn sạch banner quảng cáo VietSubTV + Sniff M3U8 PotPlayer + Skip Intro 85s + Chế độ Rạp phim",
+    version: "3.6",
+    domains: ["*://*.vietsubtv.org/*", "*://*.vietsubtv.com/*", "*://*.vietsubtv.net/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .vst-ads`
+  },
+  {
+    id: "phim247",
+    name: "Phim247 VIP & Cinema Pro Suite",
+    file: "phim247.user.js",
+    desc: "Chặn 100% quảng cáo Phim247 + Bắt link M3U8 PotPlayer + Skip Intro 85s + Anime OLED HDR",
+    version: "3.6",
+    domains: ["*://*.phim247.tv/*", "*://*.phim247.vip/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .p247-ads`
+  },
+  {
+    id: "phimhd",
+    name: "PhimHD VIP & Cinema Pro Suite",
+    file: "phimhd.user.js",
+    desc: "Diệt quảng cáo PhimHD.com + Sniff luồng M3U8 PotPlayer + Skip Intro 85s + Cinema Theater Mode",
+    version: "3.6",
+    domains: ["*://*.phimhd.com/*", "*://*.phimhd.tv/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .phd-ads`
+  },
+  {
+    id: "phimbathu",
+    name: "PhimBatHu VIP & Cinema Pro Suite",
+    file: "phimbathu.user.js",
+    desc: "Chặn quảng cáo Phim Bất Hủ + Tóm link M3U8 PotPlayer + Tua Intro 85s + OLED HDR",
+    version: "3.6",
+    domains: ["*://*.phimbathu.com/*", "*://*.phimbathu.net/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .pbh-ads`
+  },
+  {
+    id: "phimvang",
+    name: "PhimVang VIP & Cinema Pro Suite",
+    file: "phimvang.user.js",
+    desc: "Chặn sạch banner quảng cáo Phim Vàng + M3U8 Stream Sniffer PotPlayer + Skip Intro 85s + Rạp phim",
+    version: "3.6",
+    domains: ["*://*.phimvang.com/*", "*://*.phimvang.tv/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .pv-ads`
+  },
+  {
+    id: "banhtv",
+    name: "BanhTV VIP & Cinema Pro Suite",
+    file: "banhtv.user.js",
+    desc: "Chặn quảng cáo Bánh TV + Sniff M3U8 PotPlayer + Skip Intro 85s + Anime OLED HDR rực rỡ",
+    version: "3.6",
+    domains: ["*://*.banhtv.net/*", "*://*.banhtv.cc/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .btv-ads`
+  },
+  {
+    id: "hdonline",
+    name: "HDOnline VIP & Cinema Pro Suite",
+    file: "hdonline.user.js",
+    desc: "Chặn 100% quảng cáo HDOnline + Bắt link M3U8 PotPlayer + Skip Intro 85s + Cinema Mode",
+    version: "3.6",
+    domains: ["*://*.hdonline.co/*", "*://*.hdonline.tv/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .hdo-ads`
+  },
+  {
+    id: "chillhay",
+    name: "ChillHay VIP & Cinema Pro Suite",
+    file: "chillhay.user.js",
+    desc: "Diệt sạch quảng cáo ChillHay + Sniff luồng M3U8 PotPlayer + Skip Intro 85s + OLED HDR",
+    version: "3.6",
+    domains: ["*://*.chillhay.com/*", "*://*.chillhay.tv/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .chay-ads`
+  },
+  {
+    id: "xemphimplus",
+    name: "XemPhimPlus VIP & Cinema Pro Suite",
+    file: "xemphimplus.user.js",
+    desc: "Chặn quảng cáo XemPhimPlus + Tóm link M3U8 PotPlayer + Tua Intro 85s + Chế độ Rạp phim",
+    version: "3.6",
+    domains: ["*://*.xemphimplus.net/*"],
+    siteCss: `.ad-container, .ads-holder, div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"], .ads-wrapper, #chancoc, .modal-adblock, .xpp-ads`
   }
 ];
 
@@ -337,7 +458,7 @@ function generateUserscriptCode(site, isMasterAllInOne = false) {
     ? "Cinema Pro Suite (All-In-One) - Kho Phim & Anime Việt Nam"
     : site.name;
   const scriptDesc = isMasterAllInOne
-    ? "Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên Rổ Phim, Motchill, Nắng Cực, AnimeVietsub, PhimMoi, HoatHinh3D, Động Phim, TVHay, AnimeHay, BiluTV, SubNhanh, Mọt Phim, Mê Phim, Ghiền Phim, FullPhim, PhimHay!"
+    ? "Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer + Skip Intro 85s & Anime HDR trên hơn 35+ website phim, anime, hoạt hình 3D Việt Nam!"
     : site.desc;
   const scriptVersion = isMasterAllInOne ? "4.5" : site.version;
   const enableRophimVip = isMasterAllInOne || Boolean(site.isRophim);
@@ -542,6 +663,19 @@ ${matchHeaders}
           url.includes("ghienphim") ||
           url.includes("fullphim") ||
           url.includes("phimhay") ||
+          url.includes("vuighe") ||
+          url.includes("animetvn") ||
+          url.includes("hhkungfu") ||
+          url.includes("hhpanda") ||
+          url.includes("vietsubtv") ||
+          url.includes("phim247") ||
+          url.includes("phimhd") ||
+          url.includes("phimbathu") ||
+          url.includes("phimvang") ||
+          url.includes("banhtv") ||
+          url.includes("hdonline") ||
+          url.includes("chillhay") ||
+          url.includes("xemphimplus") ||
           url.includes("youtube.com") ||
           url.includes("youtu.be");
         if (!isSafe) {
@@ -658,6 +792,8 @@ ${matchHeaders}
     .hh3d-ads, .dp-ads, .tvhay-ads, .ah-ads, #box-ads, .ah-banner,
     .bl-ads, .a47-ads, .ophim-ads, .biphim-ads, .dhtv-ads,
     .motphim-ads, .mephim-ads, .ghienphim-ads, .fullphim-ads, .phimhay-ads,
+    .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
+    .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads,
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
     div[style*="zIndex: 9999999"], div[style*="backdrop-filter: blur(25px)"] {
       display: none !important;

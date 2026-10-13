@@ -181,6 +181,19 @@
           url.includes("ghienphim") ||
           url.includes("fullphim") ||
           url.includes("phimhay") ||
+          url.includes("vuighe") ||
+          url.includes("animetvn") ||
+          url.includes("hhkungfu") ||
+          url.includes("hhpanda") ||
+          url.includes("vietsubtv") ||
+          url.includes("phim247") ||
+          url.includes("phimhd") ||
+          url.includes("phimbathu") ||
+          url.includes("phimvang") ||
+          url.includes("banhtv") ||
+          url.includes("hdonline") ||
+          url.includes("chillhay") ||
+          url.includes("xemphimplus") ||
           url.includes("youtube.com") ||
           url.includes("youtu.be");
         if (!isSafe) {
@@ -297,6 +310,8 @@
     .hh3d-ads, .dp-ads, .tvhay-ads, .ah-ads, #box-ads, .ah-banner,
     .bl-ads, .a47-ads, .ophim-ads, .biphim-ads, .dhtv-ads,
     .motphim-ads, .mephim-ads, .ghienphim-ads, .fullphim-ads, .phimhay-ads,
+    .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
+    .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads,
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
     div[style*="zIndex: 9999999"], div[style*="backdrop-filter: blur(25px)"] {
       display: none !important;
