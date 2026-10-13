@@ -1,51 +1,58 @@
 # 🎬 Rophim VIP & Cinema Pro Suite - Ultimate Edition v4.5
 
 ![Version](https://img.shields.io/badge/Version-4.5_Cinema_Pro_Master-blue?style=for-the-badge&logo=javascript)
-![Tests](https://img.shields.io/badge/Tests-596%2F596_Passed-success?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-667%2F667_Passed-success?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-100%25_Production_Ready-brightgreen?style=for-the-badge)
 
-Bộ công cụ toàn diện số 1 Việt Nam: Mở khóa VIP vĩnh viễn, vô hạn Coin/TCoin, **triệt tiêu 100% AdBlock / Stream Guard**, tự động tóm link **M3U8 Stream mở bằng PotPlayer/VLC**, bộ phím tắt thần thánh **Skip Intro 85s**, bộ lọc màu **Anime OLED HDR**, và chế độ **Rạp phim Theater Mode** trên **35+ website xem phim và anime hàng đầu Việt Nam**!
+Bộ công cụ toàn diện số 1 Việt Nam: Mở khóa VIP vĩnh viễn, vô hạn Coin/TCoin, **triệt tiêu 100% AdBlock / Stream Guard**, tự động tóm link **M3U8 Stream mở bằng PotPlayer/VLC/Tải playlist .M3U**, bộ phím tắt thần thánh **Tua nhanh/lùi 5s, Skip Intro 85s, Chỉnh âm lượng, Toàn màn hình**, bộ lọc màu **Anime OLED HDR**, và chế độ **Rạp phim Theater Mode** trên **37+ website xem phim và anime hàng đầu Việt Nam**!
 
 ---
 
 ## 🌐 Các Tên Miền & Trình Phát Hỗ Trợ (Cập nhật 2026)
 
-Hệ thống script tự động nhận diện và kích hoạt trên toàn bộ 35+ hệ thống website phim và iframe player nhúng:
+Hệ thống script tự động nhận diện và kích hoạt trên toàn bộ 37+ hệ thống website phim và iframe player nhúng:
 - 🌟 **Rổ Phim**: `rophim1.vip`, `rophim1.cc`, `rophim1.co`, `rophimx.net`, `rophim.ws`, `rophim.li`, `rophim.me`, `rophim.mx`
-- 🍿 **Motchill, PhimMoi & Mọt Phim**: `phimmotchill.online`, `motchill.online`, `motchilltv.com`, `phimmoiyyy.net`, `phimmoichill.net`, `phimmoi.net`, `motphim.to`, `motphimtv.me`...
-- 🌸 **Anime & Hoạt Hình 3D (Donghua)**: `animevietsub.moe`, `vuighe.net`, `vuighe3.com`, `animetvn.com`, `animehay.tv`, `anime47.net`, `hoathinh3d.biz`, `hhkungfu.tv`, `hhpanda.com`, `donghuatv.com`...
+- 🍿 **Motchill, PhimMoi, SSPhim & Mọt Phim**: `phimmotchill.online`, `motchill.online`, `motchilltv.com`, `phimmoiyyy.net`, `phimmoichill.net`, `phimmoi.net`, `motphim.to`, `motphimtv.me`, `ssphim.net`...
+- 🌸 **Anime & Hoạt Hình 3D (Donghua)**: `animevietsub.moe`, `vuighe.net`, `vuighe3.com`, `animetvn.com`, `animehay.tv`, `anime47.net`, `hoathinh3d.biz`, `hhkungfu.tv`, `hhpanda.com`, `donghuatv.com`, `topsub.org`...
 - 🎬 **Kho Phim Chiếu Rạp & Series**: `bilutv.live`, `phim1080z.org`, `xemphim.tv`, `dongphim.net`, `tvhay.site`, `subnhanh.org`, `ophim.cc`, `biphim.net`, `mephimtv.com`, `ghienphim.net`, `fullphim.net`, `phimhay.co`...
 - 💎 **Các Web Kinh Điển Bổ Sung**: `vietsubtv.org`, `phim247.tv`, `phimhd.com`, `phimbathu.com`, `phimvang.com`, `banhtv.net`, `hdonline.co`, `chillhay.com`, `xemphimplus.net`...
-- 🛡️ **Hệ thống nhúng Player**: `*.streamc.xyz`, `embed*.streamc.xyz`, `*.goatembed.com`, `*.stream*.xyz`, `*.nguonc.com`, `*.phimapi.com`, `*.streamtape.com`, `*.doodstream.com`...
+- 🛡️ **Hệ thống nhúng Player**: `*.streamc.xyz`, `embed*.streamc.xyz`, `*.goatembed.com`, `*.stream*.xyz`, `*.nguonc.com`, `*.phimapi.com`, `*.streamtape.com`, `*.doodstream.com`, `*.vidsrc.to`, `*.streamwish.to`...
 
 ---
 
 ## ✨ Kho Vũ Khí VIP v4.5 (Cinema Pro Suite)
 
-### 1. 📺 M3U8 Stream Sniffer & 1-Click PotPlayer / VLC
-- Tự động bắt trộm đường link luồng phát `.m3u8` chất lượng gốc khi video tải (bắt cả trong iframe lẫn trang chính).
+### 1. 📺 M3U8 Stream Sniffer & 1-Click PotPlayer / VLC / Tải Playlist .M3U
+- Tự động bắt trộm đường link luồng phát `.m3u8` và direct `.mp4` chất lượng gốc khi video tải (bắt cả trong iframe lẫn trang chính).
 - **1-Click PotPlayer**: Bấm nút mở ngay phần mềm PotPlayer trên máy tính xem mượt 60fps/HDR, không giật lag, không phụ thuộc trình duyệt!
-- **Copy M3U8**: Sao chép link trực tiếp dán vào IDM hoặc VLC để tải phim và phát offline siêu tốc.
+- **1-Click VLC**: Khởi động trình phát VLC Player đa nền tảng tức thì.
+- **Tải Playlist .M3U**: Tải file playlist chuẩn `.m3u` về máy, nhấp đúp là phát ngay trên mọi media player.
+- **Copy M3U8**: Sao chép link trực tiếp dán vào IDM hoặc MPV để tải phim và phát offline siêu tốc.
 
-### 2. ⏭️ Phím Tắt Thần Thánh (Pro Hotkeys)
-- **`Phím S` hoặc `I`**: **Tua qua Intro bài hát mở đầu (+85 giây)** — cực kỳ tiện dụng cho Anime (Conan, One Piece) và phim bộ Hàn/Trung!
+### 2. ⏭️ Bộ Phím Tắt Thần Thánh (Pro Hotkeys)
+- **`Phím S` hoặc `I`**: **Tua qua Intro bài hát mở đầu (+85 giây)** — cực kỳ tiện dụng cho Anime và phim bộ Hàn/Trung!
+- **`Phím ←` / `→` (Mũi tên Trái / Phải)**: **Tua lùi 5s / Tua tới 5s** mượt mà trên cả trình phát nhúng iframe!
+- **`Phím ↑` / `↓` (Mũi tên Lên / Xuống)**: **Tăng / Giảm âm lượng (+/- 5%)** kèm thanh OSD Toast hiển thị trực quan.
+- **`Phím F`**: **Bật / Thoát toàn màn hình (Fullscreen)** trực tiếp.
+- **`Phím 0` đến `9`**: **Tua nhanh đến 0% ➔ 90%** thời lượng video (chuẩn YouTube).
 - **`Phím E`**: **Bộ lọc màu Anime OLED (HDR Enhancer)** — tăng độ tương phản và bão hòa màu, biến hình ảnh thành rực rỡ, sắc nét.
 - **`Phím T`**: **Chế độ Rạp phim (Theater Mode)** — làm mờ toàn bộ giao diện xung quanh, tập trung 100% vào khung hình video.
-- **`Phím [` và `]`**: Giảm / tăng tốc độ phát video (0.5x ➔ 3.0x) kèm thông báo OSD Toast xịn sò.
+- **`Phím [` và `]`**: Giảm / tăng tốc độ phát video (0.5x ➔ 3.0x) kèm thông báo OSD Toast.
 - **`Phím Space`**: Tạm dừng / Tiếp tục phát video thông minh (tự động bỏ qua khi đang gõ phím vào ô nhập liệu).
 - **`Phím M`**: Tắt / Mở tiếng (Mute/Unmute) tức thì.
 
-### 3. 👑 Floating VIP Control Hub
+### 3. 👑 Floating VIP Control Hub Glassmorphism
 - Biểu tượng vương miện VIP nhỏ gọn ở góc phải dưới màn hình.
 - Bấm vào để mở nhanh bảng điều khiển Pro mà không cần ghi nhớ phím tắt.
-- Tích hợp thông báo Toast hiện đại với hiệu ứng Glassmorphism.
+- Tích hợp thông báo Toast hiện đại với hiệu ứng Glassmorphism viền xanh neon emerald.
 
 ### 4. 🛡️ Triệt Tiêu 100% Cảnh Báo AdBlock & Stream Guard
 - Vô hiệu hóa Stream Guard bên trong iframe trình phát `streamc.xyz`, `goatembed.com`, `nguonc.com`, `phimapi.com`...
 - Tự động phản hồi bắt tay `stream-guard-hello` với trạng thái `hasAdblock: false, key: 'ok'`.
 - Chống tự động tạm dừng video (`HTMLMediaElement.prototype.pause`) khi phát hiện AdBlock.
 - Tự động tua qua và bỏ qua đếm ngược quảng cáo video pre-roll (JWPlayer, VideoJS, custom HTML5 player).
-- Khóa probe AdBlock toàn trang đến năm 2099 và mở khóa thanh cuộn trang.
+- Vô hiệu hóa các script chặn chuột phải (`contextmenu`), chặn bôi đen sao chép, cho phép click và copy link thoải mái.
+- Chặn sạch các lớp overlay tàng hình click-hijack mở popup lừa đảo.
 
 ### 5. 💰 Mở Khóa VIP 2099 & 999,999,999 Coin
 - Tự động vá dữ liệu phản hồi từ backend API (`/baseapi/api/v1/tcoin/me`, `/api/auth/session`...).
@@ -63,7 +70,7 @@ Nếu trình duyệt của bạn chưa có Tampermonkey, hãy cài đặt extens
 
 | Trang Web | Trạng Thái | Link Cài Đặt 1-Click | Tên Miền Hỗ Trợ |
 | :--- | :---: | :---: | :--- |
-| 👑 **ALL-IN-ONE (Bản Gộp)** | 🌟 **Khuyên Dùng** | 👉 **[CÀI BẢN ALL-IN-ONE](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/cinema-pro-all.user.js)** | **Cài 1 lần chạy trên TOÀN BỘ 35+ web bên dưới!** |
+| 👑 **ALL-IN-ONE (Bản Gộp)** | 🌟 **Khuyên Dùng** | 👉 **[CÀI BẢN ALL-IN-ONE](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/cinema-pro-all.user.js)** | **Cài 1 lần chạy trên TOÀN BỘ 37+ web bên dưới!** |
 | 🎬 **Rổ Phim (Rophim)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT RỔ PHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/rophim.user.js)** | `rophim1.vip`, `rophim1.cc`, `streamc.xyz`... |
 | 🍿 **Motchill** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT MOTCHILL](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/motchill.user.js)** | `phimmotchill.online`, `motchill.online`, `motchilltv.com`... |
 | 🔥 **Nắng Cực TV** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT NẮNG CỰC](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/nangcuc.user.js)** | `nangcuc.tv`, `nangcuc.net`, `nangcuctv.cc`... |
@@ -99,35 +106,41 @@ Nếu trình duyệt của bạn chưa có Tampermonkey, hãy cài đặt extens
 | 💻 **HDOnline** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT HDONLINE](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/hdonline.user.js)** | `hdonline.co`, `hdonline.tv`... |
 | 🌴 **ChillHay** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT CHILLHAY](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/chillhay.user.js)** | `chillhay.com`, `chillhay.tv`... |
 | ➕ **XemPhimPlus** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT XEMPHIMPLUS](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/xemphimplus.user.js)** | `xemphimplus.net`... |
+| 🍙 **TopSub (Vietsub)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT TOPSUB](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/topsub.user.js)** | `topsub.org`, `topsub.net`, `topsub.tv`... |
+| ⚡ **SSPhim (Phim Nhanh)** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT SSPHIM](https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/ssphim.user.js)** | `ssphim.net`, `ssphim.tv`, `ssphim.org`... |
 
 > 💡 **Mẹo**: Nếu anh hay xem nhiều web khác nhau, chỉ cần cài duy nhất bản **ALL-IN-ONE** là xong! Hoặc chọn từng bản riêng lẻ nếu chỉ xem cố định một trang. Nhấp vào nút **Cài đặt** ở trên, Tampermonkey sẽ tự động phát hiện và hiện bảng xác nhận. Nhấn **Install** (Cài đặt) hoặc **Update** (Cập nhật) là hoàn tất!
 
 ---
 
-## ⌨️ Bảng Phím Tắt Nhanh (Áp Dụng Cho Tất Cả Các Web)
+## ⌨️ Bảng Phím Tắt Thần Thánh (Áp Dụng Cho Tất Cả Các Web)
 
-| Phím tắt | Chức năng |
-| :---: | :--- |
-| **`S`** hoặc **`I`** | Tua nhanh qua Intro bài hát mở đầu (+85 giây) |
-| **`E`** | Bật / Tắt bộ lọc màu Anime OLED HDR Enhancer |
-| **`T`** | Bật / Tắt chế độ rạp phim (Theater Mode) |
-| **`[`** / **`]`** | Giảm / Tăng tốc độ phát video (0.5x ➔ 3.0x) |
-| **`Space`** | Tạm dừng / Tiếp tục phát video (Play / Pause) |
-| **`M`** | Tắt / Mở tiếng (Mute / Unmute) |
-| **`👑`** (Góc dưới) | Mở bảng điều khiển VIP Control Hub & Lấy Link M3U8 |
+| Phím tắt | Chức năng | Phản hồi OSD Toast |
+| :---: | :--- | :--- |
+| **`S`** hoặc **`I`** | Tua nhanh qua Intro bài hát mở đầu (+85 giây) | `⏭️ Đã tua Intro: +85s` |
+| **`←` / `→`** | Tua lùi 5 giây / Tua tới 5 giây | `⏪ Tua lùi: -5s` / `⏩ Tua tới: +5s` |
+| **`↑` / `↓`** | Tăng / Giảm âm lượng (+/- 5%) | `🔊 Âm lượng: 85%` |
+| **`F`** | Bật / Thoát toàn màn hình (Fullscreen) | `⛶ Toàn màn hình` |
+| **`0` - `9`** | Tua nhanh đến 0%, 10%, ... 90% video | `🎯 Vị trí video: 50%` |
+| **`E`** | Bật / Tắt bộ lọc màu Anime OLED HDR Enhancer | `✨ Anime OLED HDR: BẬT/TẮT` |
+| **`T`** | Bật / Tắt chế độ rạp phim (Theater Mode) | `🎭 Chế độ Rạp phim: BẬT/TẮT` |
+| **`[`** / **`]`** | Giảm / Tăng tốc độ phát video (0.5x ➔ 3.0x) | `⚡ Tốc độ phát: 1.25x` |
+| **`Space`** | Tạm dừng / Tiếp tục phát video (Play / Pause) | Trực tiếp |
+| **`M`** | Tắt / Mở tiếng (Mute / Unmute) | Trực tiếp |
+| **`👑`** (Góc dưới) | Mở bảng điều khiển VIP Control Hub & Lấy Link M3U8 | Menu Glassmorphism |
 
 ---
 
 ## 🧪 Kiểm Định Chất Lượng Tự Động (Automated Test Suite)
 
-Dự án tích hợp bộ kiểm thử tự động [`run_audit.js`](file:///run_audit.js) với **596 Unit & Runtime Assertions** chạy qua Node.js VM Sandbox độc lập:
-- **Phase 1: Metadata & Syntax Inspection** (37 files): Kiểm tra cú pháp ES2022, headers `@name`, `@match`, `@downloadURL`, `@updateURL`, `@allFrames`, `@run-at`.
-- **Phase 2: Top Window DOM & Runtime Simulation** (37 files): Kiểm thử khởi tạo Floating VIP Hub `#ro-vip-hub`, triệt tiêu `window.open` popup ad trap, phản hồi bắt tay `stream-guard-hello` (`hasAdblock: false, key: 'ok'`), kiểm soát trực tiếp `<video>` trong `sendCommandToPlayer`, hook `fetch` & `XMLHttpRequest` bắt link M3U8, và điều phối 7 phím tắt Pro (`S`, `E`, `T`, `[`, `]`, `Space`, `M`).
-- **Phase 3: Iframe Player Embed & Stream Guard Defusal** (37 files): Giả lập iframe embed player, kiểm tra defuse `window.streamGuard` (`isBlocked() === false`), vô hiệu hóa `HTMLMediaElement.prototype.pause` do Guard kích hoạt, tự động skip đếm ngược quảng cáo video pre-roll, và cầu nối `postMessage` M3U8 Stream Sniffer về trang cha.
+Dự án tích hợp bộ kiểm thử tự động [`run_audit.js`](file:///run_audit.js) với **667 Unit & Runtime Assertions** chạy qua Node.js VM Sandbox độc lập:
+- **Phase 1: Metadata & Syntax Inspection** (39 files): Kiểm tra cú pháp ES2022, headers `@name`, `@match`, `@downloadURL`, `@updateURL`, `@allFrames`, `@run-at`.
+- **Phase 2: Top Window DOM & Runtime Simulation** (39 files): Kiểm thử khởi tạo Floating VIP Hub `#ro-vip-hub`, triệt tiêu `window.open` popup ad trap, phản hồi bắt tay `stream-guard-hello` (`hasAdblock: false, key: 'ok'`), kiểm soát trực tiếp `<video>` trong `sendCommandToPlayer`, hook `fetch` & `XMLHttpRequest` bắt link M3U8, và điều phối 14 phím tắt Pro (`S`, `I`, `Arrows`, `F`, `E`, `T`, `[`, `]`, `Space`, `M`, `0`-`9`).
+- **Phase 3: Iframe Player Embed & Stream Guard Defusal** (39 files): Giả lập iframe embed player, kiểm tra defuse `window.streamGuard` (`isBlocked() === false`), vô hiệu hóa `HTMLMediaElement.prototype.pause` do Guard kích hoạt, tự động skip đếm ngược quảng cáo video pre-roll, truyền lệnh điều khiển từ xa (SEEK, VOLUME, FULLSCREEN) và cầu nối `postMessage` M3U8 Stream Sniffer về trang cha.
 - **Phase 4: Rophim VIP 2099 & Coin Backend Response Patcher** (`rophim.user.js`, `tampermonkey.user.js`, `cinema-pro-all.user.js`): Xác thực can thiệp API backend `/baseapi/api/v1/tcoin/me` (1 tỷ Coin) và `/api/auth/session` (VIP đến năm 2099).
 
 Chạy kiểm định toàn bộ hệ thống:
 ```bash
 node run_audit.js
 ```
-*(Kết quả: 596/596 Assertions Passed - Health Score: 100.0%)*
+*(Kết quả: 667/667 Assertions Passed - Health Score: 100.0%)*

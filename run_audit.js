@@ -111,6 +111,7 @@ class MockElement {
     this.duration = 1000;
     this.paused = true;
     this.muted = false;
+    this.volume = 1.0;
   }
 
   appendChild(el) {
@@ -151,6 +152,7 @@ class MockElement {
 
   play() { this.paused = false; return Promise.resolve(); }
   pause() { this.paused = true; }
+  requestFullscreen() { return Promise.resolve(); }
 }
 
 function createTopWindowMock(hostname = "rophim1.vip") {
@@ -160,6 +162,7 @@ function createTopWindowMock(hostname = "rophim1.vip") {
   videoElem.playbackRate = 1.0;
   videoElem.currentTime = 10;
   videoElem.duration = 1000;
+  videoElem.volume = 1.0;
 
   const listeners = {};
   let handshakeReply = null;
@@ -169,6 +172,8 @@ function createTopWindowMock(hostname = "rophim1.vip") {
     body,
     head,
     documentElement: head,
+    fullscreenElement: null,
+    exitFullscreen: () => Promise.resolve(),
     createElement: (tag) => new MockElement(tag),
     getElementById: (id) => {
       if (id === "ro-vip-hub") {
@@ -216,6 +221,16 @@ function createTopWindowMock(hostname = "rophim1.vip") {
       clipboard: {
         writeText: async (t) => true
       }
+    },
+    Blob: class Blob {
+      constructor(content, opts) {
+        this.content = content;
+        this.type = opts?.type || "";
+      }
+    },
+    URL: {
+      createObjectURL: () => "blob:mock-url",
+      revokeObjectURL: () => {}
     },
     localStorage: {
       _store: {},
@@ -281,6 +296,8 @@ scriptFiles.forEach(file => {
     console: window.console,
     HTMLMediaElement: window.HTMLMediaElement,
     Storage: window.Storage,
+    Blob: window.Blob,
+    URL: window.URL,
     Promise,
     Response: class {
       constructor(body, init) {
@@ -326,24 +343,31 @@ scriptFiles.forEach(file => {
     window.fetch("https://storage.cdn.com/stream/index.m3u8");
     report(`${file}: Top Window fetch hooked for M3U8 stream sniffer`, true);
 
-    // Test 2.5: Direct video element control & Hotkeys
+    // Test 2.5: Direct video element control & Hotkeys (Expanded: S, I, Arrows, F, E, T, [, ], Space, M, 0-9)
     let hotkeysPassed = true;
     if (listeners["keydown"]) {
       try {
         listeners["keydown"].forEach(cb => {
           cb({ key: "s", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "i", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "arrowleft", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "arrowright", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "arrowup", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "arrowdown", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "f", preventDefault: () => {}, target: { tagName: "DIV" } });
           cb({ key: "e", preventDefault: () => {}, target: { tagName: "DIV" } });
           cb({ key: "t", preventDefault: () => {}, target: { tagName: "DIV" } });
           cb({ key: "[", preventDefault: () => {}, target: { tagName: "DIV" } });
           cb({ key: "]", preventDefault: () => {}, target: { tagName: "DIV" } });
           cb({ key: " ", preventDefault: () => {}, target: { tagName: "DIV" } });
           cb({ key: "m", preventDefault: () => {}, target: { tagName: "DIV" } });
+          cb({ key: "5", preventDefault: () => {}, target: { tagName: "DIV" } });
         });
       } catch (err) {
         hotkeysPassed = false;
       }
     }
-    report(`${file}: Cinema Pro Hotkeys (S, E, T, [, ], Space, M) fired safely`, hotkeysPassed);
+    report(`${file}: Cinema Pro 14 Hotkeys (S, I, Arrows, F, E, T, [, ], Space, M, 0-9) fired safely`, hotkeysPassed);
 
   } catch (err) {
     report(`${file}: Top Window execution error`, false, err.stack);
@@ -362,6 +386,7 @@ function createIframeMock() {
   const mockVideo = new MockElement("VIDEO");
   mockVideo.duration = 45; // pre-roll ad duration
   mockVideo.currentTime = 5;
+  mockVideo.volume = 1.0;
 
   const mockAdNotice = new MockElement("DIV");
   mockAdNotice.className = "jw-ad-notice jw-ad-countdown";
@@ -370,6 +395,8 @@ function createIframeMock() {
     head: new MockElement("HEAD"),
     body: new MockElement("BODY"),
     documentElement: new MockElement("HTML"),
+    fullscreenElement: null,
+    exitFullscreen: () => Promise.resolve(),
     createElement: (tag) => new MockElement(tag),
     querySelector: (sel) => {
       if (sel === "video") return mockVideo;
@@ -468,6 +495,22 @@ scriptFiles.forEach(file => {
     const posted = getPosted();
     const snifferPassed = Boolean(posted && posted.type === "RO_STREAM_FOUND" && posted.streamUrl.includes(".m3u8"));
     report(`${file}: M3U8 Stream Sniffer hooked fetch & posted to parent`, snifferPassed);
+
+    // Test 3.4: Player remote command handling (seek, volume, fullscreen)
+    let commandPassed = true;
+    if (listeners["message"]) {
+      try {
+        listeners["message"].forEach(cb => {
+          cb({ data: { type: "RO_CMD_SEEK", delta: 5 } });
+          cb({ data: { type: "RO_CMD_VOLUME", volume: 0.8 } });
+          cb({ data: { type: "RO_CMD_FULLSCREEN" } });
+          cb({ data: { type: "RO_CMD_SEEK_PERCENT", percent: 50 } });
+        });
+      } catch (err) {
+        commandPassed = false;
+      }
+    }
+    report(`${file}: Iframe Remote Commands (SEEK, VOLUME, FULLSCREEN) processed`, commandPassed);
 
   } catch (err) {
     report(`${file}: Iframe Context execution`, false, err.stack);

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         PhimMoi & PhimMoiChill VIP & Cinema Pro Suite
 // @namespace    http://tampermonkey.net/
-// @version      3.6
-// @description  Chặn 100% quảng cáo PhimMoi/PhimMoiChill + Khắc chế Stream Guard + Bắt link M3U8 PotPlayer + Phím tắt Skip Intro & Cinema Mode
+// @version      4.5
+// @description  Chặn 100% quảng cáo PhimMoi/PhimMoiChill + Khắc chế Stream Guard + Bắt link M3U8 PotPlayer/VLC + Phím tắt Skip Intro & Cinema Mode
 // @author       ekaznyra
 // @match        *://*.phimmoiyyy.net/*
 // @match        *://*.phimmoichill.net/*
@@ -12,6 +12,8 @@
 // @match        *://*.phimmoi.net/*
 // @match        *://*.phimmoiz.net/*
 // @match        *://*.phimmoivn.net/*
+// @match        *://*.phimmoito.net/*
+// @match        *://*.phimmoichill.com/*
 // @match        *://*.streamc.xyz/*
 // @match        *://embed*.streamc.xyz/*
 // @match        *://*.stream*.xyz/*
@@ -22,12 +24,22 @@
 // @match        *://*.stream*.co/*
 // @match        *://*.goatembed.com/*
 // @match        *://*.emturbovid.com/*
+// @match        *://*.turboviplay.com/*
 // @match        *://*.streamtape.com/*
 // @match        *://*.doodstream.com/*
+// @match        *://*.dood.*/*
 // @match        *://*.nguonc.com/*
-// @match        *://*.phimapi.com/*
 // @match        *://api.nguonc.com/*
+// @match        *://*.phimapi.com/*
 // @match        *://player.phimapi.com/*
+// @match        *://*.2embed.cc/*
+// @match        *://*.2embed.to/*
+// @match        *://*.vidsrc.to/*
+// @match        *://*.vidsrc.me/*
+// @match        *://*.streamwish.to/*
+// @match        *://*.streamwish.com/*
+// @match        *://*.filelions.to/*
+// @match        *://*.filelions.com/*
 // @allFrames    true
 // @run-at       document-start
 // @grant        none
@@ -48,7 +60,16 @@
     host.includes("streamc") ||
     host.includes("embed") ||
     host.includes("goatembed") ||
-    path.includes("embed");
+    host.includes("nguonc") ||
+    host.includes("phimapi") ||
+    host.includes("emturbovid") ||
+    host.includes("turboviplay") ||
+    host.includes("dood") ||
+    host.includes("streamtape") ||
+    host.includes("streamwish") ||
+    host.includes("filelions") ||
+    path.includes("embed") ||
+    path.includes("/v/");
 
   // ═══════════════════════════════════════════════════════════════
   // ⚡ 1. IFRAME EMBED PLAYER GUARD KILLER & STREAM SNIFFER
@@ -104,11 +125,11 @@
       const adNotice = document.querySelector(
         ".jw-ad-notice, .jw-ad-countdown, .ad-showing, .video-ads, .ad-interrupting, [class*='ad-countdown']"
       );
-      if (adNotice && video && video.duration < 90) {
+      if (adNotice && video && video.duration < 120) {
         video.currentTime = video.duration || 999;
       }
       const skipBtn = document.querySelector(
-        ".jw-skip, .videoAdUiSkipButton, .ytp-ad-skip-button, .skip-ad, button[class*='skip']"
+        ".jw-skip, .videoAdUiSkipButton, .ytp-ad-skip-button, .skip-ad, button[class*='skip'], .ad-skip"
       );
       if (skipBtn && typeof skipBtn.click === "function") {
         try { skipBtn.click(); } catch (e) {}
@@ -130,12 +151,21 @@
 
     function notifyStream(url) {
       if (!url || typeof url !== "string") return;
-      if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist")) {
+      if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist") || (url.includes(".mp4") && !url.includes("preview"))) {
         try {
           window.parent.postMessage({ type: "RO_STREAM_FOUND", streamUrl: url }, "*");
         } catch (e) {}
       }
     }
+
+    // Sniff DOM video element src
+    setInterval(() => {
+      const v = document.querySelector("video");
+      if (v) {
+        if (v.currentSrc) notifyStream(v.currentSrc);
+        if (v.src) notifyStream(v.src);
+      }
+    }, 1500);
 
     const origFetch = window.fetch;
     window.fetch = async function (input, init) {
@@ -162,6 +192,24 @@
         const s = e.data.seconds || 85;
         if (video) video.currentTime = Math.min(video.duration || Infinity, video.currentTime + s);
         else if (activePlayer?.seek) activePlayer.seek(activePlayer.getPosition() + s);
+      } else if (e.data.type === "RO_CMD_SEEK") {
+        const delta = e.data.delta || 0;
+        if (video) video.currentTime = Math.max(0, Math.min(video.duration || Infinity, video.currentTime + delta));
+        else if (activePlayer?.seek) {
+          const cur = activePlayer.getPosition ? activePlayer.getPosition() : 0;
+          activePlayer.seek(Math.max(0, cur + delta));
+        }
+      } else if (e.data.type === "RO_CMD_SEEK_PERCENT") {
+        const pct = Math.max(0, Math.min(100, e.data.percent || 0));
+        if (video && video.duration) {
+          video.currentTime = (video.duration * pct) / 100;
+        } else if (activePlayer?.seek && activePlayer?.getDuration) {
+          activePlayer.seek((activePlayer.getDuration() * pct) / 100);
+        }
+      } else if (e.data.type === "RO_CMD_VOLUME") {
+        const vol = Math.max(0, Math.min(1, e.data.volume !== undefined ? e.data.volume : 1));
+        if (video) video.volume = vol;
+        else if (activePlayer?.setVolume) activePlayer.setVolume(Math.round(vol * 100));
       } else if (e.data.type === "RO_CMD_SET_SPEED") {
         const speed = e.data.speed || 1;
         if (video) video.playbackRate = speed;
@@ -179,6 +227,17 @@
       } else if (e.data.type === "RO_CMD_MUTE") {
         if (video) video.muted = !video.muted;
         else if (activePlayer?.setMute) activePlayer.setMute(!activePlayer.getMute());
+      } else if (e.data.type === "RO_CMD_FULLSCREEN") {
+        if (document.fullscreenElement) {
+          try { document.exitFullscreen().catch(() => {}); } catch (err) {}
+        } else {
+          const target = video || document.body;
+          if (target && target.requestFullscreen) {
+            try { target.requestFullscreen().catch(() => {}); } catch (err) {}
+          } else if (activePlayer?.setFullscreen) {
+            activePlayer.setFullscreen(true);
+          }
+        }
       }
     });
 
@@ -196,6 +255,11 @@
       return origSetItem.apply(this, arguments);
     };
   } catch (e) {}
+
+  // Unblock right-click and selection blocking scripts
+  ["contextmenu", "copy", "cut", "selectstart"].forEach(ev => {
+    document.addEventListener(ev, e => e.stopPropagation(), true);
+  });
 
   try {
     const origOpen = window.open;
@@ -221,7 +285,6 @@
           url.includes("ghienphim") ||
           url.includes("fullphim") ||
           url.includes("phimhay") ||
-          url.includes("vuighe") ||
           url.includes("animetvn") ||
           url.includes("hhkungfu") ||
           url.includes("hhpanda") ||
@@ -234,6 +297,8 @@
           url.includes("hdonline") ||
           url.includes("chillhay") ||
           url.includes("xemphimplus") ||
+          url.includes("topsub") ||
+          url.includes("ssphim") ||
           url.includes("youtube.com") ||
           url.includes("youtu.be");
         if (!isSafe) {
@@ -250,6 +315,7 @@
   // ═══════════════════════════════════════════════════════════════
   let capturedStreamUrl = "";
   let currentSpeed = 1.0;
+  let currentVolume = 1.0;
   let isHdrEnabled = false;
   let isTheaterMode = false;
 
@@ -267,7 +333,7 @@
       } catch (err) {}
     } else if (event.data && event.data.type === "RO_STREAM_FOUND") {
       capturedStreamUrl = event.data.streamUrl;
-      console.log("%c🎬 [Cinema Pro Sniffer] M3U8 Stream:", "color: #51f085;", capturedStreamUrl);
+      console.log("%c🎬 [Cinema Pro Sniffer] Stream luồng:", "color: #51f085;", capturedStreamUrl);
       const btn = document.getElementById("ro-potplayer-btn");
       if (btn) {
         btn.style.borderColor = "#51f085";
@@ -281,6 +347,12 @@
     if (video) {
       if (cmd.type === "RO_CMD_SKIP_INTRO") {
         video.currentTime = Math.min(video.duration || Infinity, video.currentTime + (cmd.seconds || 85));
+      } else if (cmd.type === "RO_CMD_SEEK") {
+        video.currentTime = Math.max(0, Math.min(video.duration || Infinity, video.currentTime + (cmd.delta || 0)));
+      } else if (cmd.type === "RO_CMD_SEEK_PERCENT") {
+        if (video.duration) video.currentTime = (video.duration * (cmd.percent || 0)) / 100;
+      } else if (cmd.type === "RO_CMD_VOLUME") {
+        video.volume = Math.max(0, Math.min(1, cmd.volume !== undefined ? cmd.volume : 1));
       } else if (cmd.type === "RO_CMD_SET_SPEED") {
         video.playbackRate = cmd.speed || 1;
       } else if (cmd.type === "RO_CMD_TOGGLE_HDR") {
@@ -290,6 +362,12 @@
         else video.pause();
       } else if (cmd.type === "RO_CMD_MUTE") {
         video.muted = !video.muted;
+      } else if (cmd.type === "RO_CMD_FULLSCREEN") {
+        if (document.fullscreenElement) {
+          try { document.exitFullscreen().catch(() => {}); } catch (e) {}
+        } else {
+          try { video.requestFullscreen().catch(() => {}); } catch (e) {}
+        }
       }
     }
     document.querySelectorAll("iframe").forEach(f => {
@@ -299,7 +377,7 @@
 
   function checkAndCaptureUrl(url) {
     if (!url || typeof url !== "string") return;
-    if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist")) {
+    if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist") || (url.includes(".mp4") && !url.includes("preview"))) {
       capturedStreamUrl = url;
       const btn = document.getElementById("ro-potplayer-btn");
       if (btn) {
@@ -308,6 +386,15 @@
       }
     }
   }
+
+  // Sniff video tag in top window
+  setInterval(() => {
+    const v = document.querySelector("video");
+    if (v) {
+      if (v.currentSrc) checkAndCaptureUrl(v.currentSrc);
+      if (v.src) checkAndCaptureUrl(v.src);
+    }
+  }, 1500);
 
   // Sniff fetch trên trang chính
   const origFetchMain = window.fetch;
@@ -343,7 +430,7 @@
     .bl-ads, .a47-ads, .ophim-ads, .biphim-ads, .dhtv-ads,
     .motphim-ads, .mephim-ads, .ghienphim-ads, .fullphim-ads, .phimhay-ads,
     .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
-    .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads,
+    .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads, .ts-ads, .ss-ads,
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
     div[style*="zIndex: 9999999"], div[style*="backdrop-filter: blur(25px)"] {
       display: none !important;
@@ -447,7 +534,7 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
       color: #f1f5f9;
-      padding: 9px 12px;
+      padding: 8px 12px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 500;
@@ -508,6 +595,24 @@
     showToast(`⏭️ Đã tua Intro: +${sec}s`);
   }
 
+  function seekRelative(delta = 5) {
+    sendCommandToPlayer({ type: "RO_CMD_SEEK", delta });
+    showToast(delta > 0 ? `⏩ Tua tới: +${delta}s` : `⏪ Tua lùi: ${delta}s`);
+  }
+
+  function seekToPercent(pct = 0) {
+    sendCommandToPlayer({ type: "RO_CMD_SEEK_PERCENT", percent: pct });
+    showToast(`🎯 Vị trí video: ${pct}%`);
+  }
+
+  function adjustVolume(delta) {
+    let newVol = Math.round((currentVolume + delta) * 100) / 100;
+    newVol = Math.max(0, Math.min(1.0, newVol));
+    currentVolume = newVol;
+    sendCommandToPlayer({ type: "RO_CMD_VOLUME", volume: currentVolume });
+    showToast(`🔊 Âm lượng: ${Math.round(currentVolume * 100)}%`);
+  }
+
   function toggleHdr() {
     isHdrEnabled = !isHdrEnabled;
     sendCommandToPlayer({ type: "RO_CMD_TOGGLE_HDR" });
@@ -520,6 +625,21 @@
     showToast(isTheaterMode ? "🎭 Chế độ Rạp phim: BẬT" : "🎭 Chế độ Rạp phim: TẮT");
   }
 
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      try { document.exitFullscreen().catch(() => {}); } catch (e) {}
+      showToast("🗗 Đã thoát Toàn màn hình");
+    } else {
+      const playerWrapper = document.querySelector(".player-wrapper, .player-container, #player, iframe, video");
+      const target = playerWrapper || document.documentElement;
+      if (target && target.requestFullscreen) {
+        try { target.requestFullscreen().catch(() => {}); } catch (e) {}
+      }
+      sendCommandToPlayer({ type: "RO_CMD_FULLSCREEN" });
+      showToast("⛶ Toàn màn hình");
+    }
+  }
+
   function openPotPlayer() {
     if (!capturedStreamUrl) {
       showToast("⚠️ Đang chờ bắt link video, hãy bấm Play trước!");
@@ -529,16 +649,44 @@
     showToast("🚀 Đang mở PotPlayer...");
   }
 
+  function openVlcPlayer() {
+    if (!capturedStreamUrl) {
+      showToast("⚠️ Đang chờ bắt link video, hãy bấm Play trước!");
+      return;
+    }
+    window.location.href = `vlc://${capturedStreamUrl}`;
+    showToast("🧡 Đang mở VLC Player...");
+  }
+
   function copyM3u8() {
     if (!capturedStreamUrl) {
-      showToast("⚠️ Chưa có link M3U8, hãy bấm Play phim trước!");
+      showToast("⚠️ Chưa có link video, hãy bấm Play trước!");
       return;
     }
     navigator.clipboard.writeText(capturedStreamUrl).then(() => {
-      showToast("📋 Đã copy link M3U8 vào Clipboard!");
+      showToast("📋 Đã copy link vào Clipboard (IDM / PotPlayer)!");
     }).catch(() => {
-      showToast("Link M3U8: " + capturedStreamUrl.slice(0, 40) + "...");
+      showToast("Link: " + capturedStreamUrl.slice(0, 40) + "...");
     });
+  }
+
+  function downloadM3uFile() {
+    if (!capturedStreamUrl) {
+      showToast("⚠️ Chưa có link video, hãy bấm Play trước!");
+      return;
+    }
+    const content = `#EXTM3U\n#EXTINF:-1,Cinema Pro Stream\n${capturedStreamUrl}\n`;
+    const blob = new Blob([content], { type: "audio/x-mpegurl" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `CinemaPro_${Date.now()}.m3u`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    }, 1000);
+    showToast("💾 Đã tải file playlist .m3u!");
   }
 
   function adjustSpeed(delta) {
@@ -559,19 +707,31 @@
       <div id="ro-hub-menu">
         <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #51f085; display: flex; justify-content: space-between;">
           <span>🎬 PhimMoi & PhimMoiChill VIP & Cinema Pro Suite</span>
-          <span style="font-size: 11px; opacity: 0.7;">v3.6</span>
+          <span style="font-size: 11px; opacity: 0.7;">v4.5</span>
         </div>
         <button class="ro-menu-btn" id="ro-potplayer-btn">
-          <span>🚀 Mở Bằng PotPlayer</span>
+          <span>🚀 Mở PotPlayer</span>
+          <span class="ro-badge">Direct</span>
+        </button>
+        <button class="ro-menu-btn" id="ro-vlc-btn">
+          <span>🧡 Mở VLC Player</span>
           <span class="ro-badge">Direct</span>
         </button>
         <button class="ro-menu-btn" id="ro-copym3u8-btn">
-          <span>📋 Sao Chép Link M3U8</span>
+          <span>📋 Sao Chép Link Luồng</span>
           <span class="ro-badge">IDM</span>
+        </button>
+        <button class="ro-menu-btn" id="ro-m3ufile-btn">
+          <span>💾 Tải Playlist .M3U</span>
+          <span class="ro-badge">File</span>
         </button>
         <button class="ro-menu-btn" id="ro-skipintro-btn">
           <span>⏭️ Bỏ Qua Intro 85s</span>
-          <span class="ro-badge">Phím S</span>
+          <span class="ro-badge">S / I</span>
+        </button>
+        <button class="ro-menu-btn" id="ro-fullscreen-btn">
+          <span>⛶ Toàn Màn Hình</span>
+          <span class="ro-badge">Phím F</span>
         </button>
         <button class="ro-menu-btn" id="ro-hdr-btn">
           <span>✨ Anime OLED HDR</span>
@@ -582,6 +742,14 @@
           <span class="ro-badge">Phím T</span>
         </button>
         <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <button class="ro-menu-btn" id="ro-vol-down" style="flex: 1; justify-content: center;" title="Giảm âm lượng">
+            <span>🔉 Giảm (↓)</span>
+          </button>
+          <button class="ro-menu-btn" id="ro-vol-up" style="flex: 1; justify-content: center;" title="Tăng âm lượng">
+            <span>🔊 Tăng (↑)</span>
+          </button>
+        </div>
+        <div style="display: flex; gap: 8px;">
           <button class="ro-menu-btn" id="ro-speed-down" style="flex: 1; justify-content: center;">
             <span>➖ Chậm ([)</span>
           </button>
@@ -611,10 +779,15 @@
     };
 
     bind("ro-potplayer-btn", openPotPlayer);
+    bind("ro-vlc-btn", openVlcPlayer);
     bind("ro-copym3u8-btn", copyM3u8);
-    bind("ro-skipintro-btn", () => skipIntro());
+    bind("ro-m3ufile-btn", downloadM3uFile);
+    bind("ro-skipintro-btn", () => skipIntro(85));
+    bind("ro-fullscreen-btn", toggleFullscreen);
     bind("ro-hdr-btn", toggleHdr);
     bind("ro-theater-btn", toggleTheater);
+    bind("ro-vol-down", () => adjustVolume(-0.05));
+    bind("ro-vol-up", () => adjustVolume(0.05));
     bind("ro-speed-down", () => adjustSpeed(-1));
     bind("ro-speed-up", () => adjustSpeed(1));
   }
@@ -626,7 +799,22 @@
     const key = e.key.toLowerCase();
     if (key === "s" || key === "i") {
       e.preventDefault();
-      skipIntro();
+      skipIntro(85);
+    } else if (key === "arrowleft") {
+      e.preventDefault();
+      seekRelative(-5);
+    } else if (key === "arrowright") {
+      e.preventDefault();
+      seekRelative(5);
+    } else if (key === "arrowup") {
+      e.preventDefault();
+      adjustVolume(0.05);
+    } else if (key === "arrowdown") {
+      e.preventDefault();
+      adjustVolume(-0.05);
+    } else if (key === "f") {
+      e.preventDefault();
+      toggleFullscreen();
     } else if (key === "e") {
       e.preventDefault();
       toggleHdr();
@@ -645,6 +833,9 @@
     } else if (key === "m") {
       e.preventDefault();
       sendCommandToPlayer({ type: "RO_CMD_MUTE" });
+    } else if (/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+      seekToPercent(parseInt(e.key, 10) * 10);
     }
   });
 
