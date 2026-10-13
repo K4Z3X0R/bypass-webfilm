@@ -1,22 +1,19 @@
 (function () {
   "use strict";
 
-  // ═══════════════════════════════════════════════════════════════
-  // 🎬 ROPHIM VIP & CINEMA PRO SUITE v3.5 (ULTIMATE EDITION)
-  // ═══════════════════════════════════════════════════════════════
-
+  const host = location.hostname || "";
+  const path = location.pathname || "";
   const isEmbedPlayer =
     window.self !== window.top ||
-    location.hostname.includes("streamc") ||
-    location.hostname.includes("embed") ||
-    location.hostname.includes("goatembed") ||
-    location.pathname.includes("embed");
+    host.includes("streamc") ||
+    host.includes("embed") ||
+    host.includes("goatembed") ||
+    path.includes("embed");
 
   // ═══════════════════════════════════════════════════════════════
-  // ⚡ IFRAME EMBED PLAYER GUARD KILLER & STREAM SNIFFER
+  // ⚡ 1. IFRAME EMBED PLAYER GUARD KILLER & STREAM SNIFFER
   // ═══════════════════════════════════════════════════════════════
   if (isEmbedPlayer) {
-    // 1. Cài đặt dummy streamGuard để vô hiệu hóa guard script
     let activePlayer = null;
     const dummyGuard = {
       version: "guard-25",
@@ -45,7 +42,6 @@
       window.streamGuard = dummyGuard;
     }
 
-    // 2. Chặn đứng các lệnh pause() bắt nguồn từ hệ thống Guard
     try {
       const origPause = HTMLMediaElement.prototype.pause;
       HTMLMediaElement.prototype.pause = function () {
@@ -56,47 +52,43 @@
           stack.includes("adError") ||
           stack.includes("stream-guard")
         ) {
-          console.log("[Rophim Bypass] Đã chặn Guard tạm dừng video");
           return;
         }
         return origPause.apply(this, arguments);
       };
     } catch (e) {}
 
-    // 3. Tiêm CSS triệt tiêu hoàn toàn khung cảnh báo và mở khóa player
+    // Auto-skip video pre-roll ad in player iframe
+    setInterval(() => {
+      const video = document.querySelector("video");
+      const adNotice = document.querySelector(
+        ".jw-ad-notice, .jw-ad-countdown, .ad-showing, .video-ads, .ad-interrupting, [class*='ad-countdown']"
+      );
+      if (adNotice && video && video.duration < 90) {
+        video.currentTime = video.duration || 999;
+      }
+      const skipBtn = document.querySelector(
+        ".jw-skip, .videoAdUiSkipButton, .ytp-ad-skip-button, .skip-ad, button[class*='skip']"
+      );
+      if (skipBtn && typeof skipBtn.click === "function") {
+        try { skipBtn.click(); } catch (e) {}
+      }
+    }, 400);
+
     const embedStyle = document.createElement("style");
     embedStyle.textContent = `
-      #stream-guard,
-      #stream-guard-card,
-      .stream-guard-card,
-      .stream-guard,
-      #stream-guard-message,
-      #stream-guard-title,
-      .stream-guard-actions,
-      div[id*="stream-guard"],
-      div[class*="stream-guard"] {
+      #stream-guard, #stream-guard-card, .stream-guard, div[id*="stream-guard"] {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
-        pointer-events: none !important;
-        z-index: -99999 !important;
       }
-      #player, .jwplayer, video {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-      }
-      /* Anime HDR Video Filter */
       video.ro-enhanced-hdr {
-        filter: contrast(1.08) saturate(1.22) brightness(1.03) !important;
-        transition: filter 0.3s ease;
+        filter: contrast(1.10) saturate(1.25) brightness(1.04) !important;
       }
     `;
     (document.head || document.documentElement).appendChild(embedStyle);
 
-    // 4. Sniff M3U8 Stream link bên trong Iframe và gửi ra trang cha
-    function notifyParentStream(url) {
+    function notifyStream(url) {
       if (!url || typeof url !== "string") return;
       if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist")) {
         try {
@@ -108,7 +100,7 @@
     const origFetch = window.fetch;
     window.fetch = async function (input, init) {
       const url = typeof input === "string" ? input : input?.url || "";
-      notifyParentStream(url);
+      notifyStream(url);
       return origFetch.apply(this, arguments);
     };
 
@@ -117,50 +109,97 @@
       const xhr = new OrigXHR();
       const origOpen = xhr.open;
       xhr.open = function (m, u) {
-        notifyParentStream(u);
+        notifyStream(u);
         return origOpen.apply(this, arguments);
       };
       return xhr;
     };
 
-    // 5. Lắng nghe phím tắt điều khiển từ trang cha gửi vào Iframe
     window.addEventListener("message", function (e) {
       if (!e.data || typeof e.data !== "object") return;
-
       const video = document.querySelector("video");
       if (e.data.type === "RO_CMD_SKIP_INTRO") {
-        const skipSec = e.data.seconds || 85;
-        if (video) video.currentTime = Math.min(video.duration || Infinity, video.currentTime + skipSec);
-        else if (activePlayer?.seek) activePlayer.seek(activePlayer.getPosition() + skipSec);
+        const s = e.data.seconds || 85;
+        if (video) video.currentTime = Math.min(video.duration || Infinity, video.currentTime + s);
+        else if (activePlayer?.seek) activePlayer.seek(activePlayer.getPosition() + s);
       } else if (e.data.type === "RO_CMD_SET_SPEED") {
         const speed = e.data.speed || 1;
         if (video) video.playbackRate = speed;
         else if (activePlayer?.setPlaybackRate) activePlayer.setPlaybackRate(speed);
       } else if (e.data.type === "RO_CMD_TOGGLE_HDR") {
         if (video) video.classList.toggle("ro-enhanced-hdr");
+      } else if (e.data.type === "RO_CMD_TOGGLE_PLAY") {
+        if (video) {
+          if (video.paused) video.play().catch(() => {});
+          else video.pause();
+        } else if (activePlayer?.play && activePlayer?.pause) {
+          if (activePlayer.getState && activePlayer.getState() === "playing") activePlayer.pause();
+          else activePlayer.play();
+        }
+      } else if (e.data.type === "RO_CMD_MUTE") {
+        if (video) video.muted = !video.muted;
+        else if (activePlayer?.setMute) activePlayer.setMute(!activePlayer.getMute());
       }
     });
 
-    console.log("%c🎬 Stream Guard Bypassed in Player Iframe!", "color: #51f085; font-weight: bold;");
     return;
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // 🌟 LOGIC WEBSITE CHÍNH (ROPHIM1.VIP / ROPHIM1.CC / ROPHIM1.CO)
+  // 🛡️ 2. WEBSITE CHÍNH - ANTI-ADBLOCK, PROBE DEFUSER & POPUP TRAP
   // ═══════════════════════════════════════════════════════════════
+  try {
+    localStorage.setItem("ro_probe_", "9999999999999");
+    const origSetItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === "probe_until" || key === "adblock_detected") return;
+      return origSetItem.apply(this, arguments);
+    };
+  } catch (e) {}
 
-  const VIP_EXPIRY_DATE = new Date(2099, 6, 18, 0, 0, 0);
-  const VIP_EXPIRY_TIMESTAMP = Math.floor(VIP_EXPIRY_DATE.getTime() / 1000);
-  const COIN_BALANCE = 999999999;
-  const FUTURE_PROBE_TIMESTAMP = "9999999999999";
+  try {
+    const origOpen = window.open;
+    window.open = function (url) {
+      if (typeof url === "string") {
+        const isSafe =
+          url.startsWith("/") ||
+          url.includes(location.hostname) ||
+          url.includes("rophim") ||
+          url.includes("motchill") ||
+          url.includes("nangcuc") ||
+          url.includes("animevietsub") ||
+          url.includes("subnhanh") ||
+          url.includes("phimmoi") ||
+          url.includes("hoathinh3d") ||
+          url.includes("dongphim") ||
+          url.includes("tvhay") ||
+          url.includes("animehay") ||
+          url.includes("vuighe") ||
+          url.includes("bilutv") ||
+          url.includes("motphim") ||
+          url.includes("mephim") ||
+          url.includes("ghienphim") ||
+          url.includes("fullphim") ||
+          url.includes("phimhay") ||
+          url.includes("youtube.com") ||
+          url.includes("youtu.be");
+        if (!isSafe) {
+          console.log("[Cinema Pro] Đã chặn popup quảng cáo:", url);
+          return null;
+        }
+      }
+      return origOpen.apply(this, arguments);
+    };
+  } catch (e) {}
+
+  // ═══════════════════════════════════════════════════════════════
+  // 📺 3. M3U8 SNIFFER & POSTMESSAGE BRIDGE
+  // ═══════════════════════════════════════════════════════════════
   let capturedStreamUrl = "";
   let currentSpeed = 1.0;
   let isHdrEnabled = false;
   let isTheaterMode = false;
 
-  // ═══════════════════════════════════════════════════════════════
-  // 🛡️ LAYER 1: PARENT TO IFRAME POSTMESSAGE COMMUNICATOR
-  // ═══════════════════════════════════════════════════════════════
   window.addEventListener("message", function (event) {
     if (event.data && event.data.type === "stream-guard-hello") {
       try {
@@ -175,195 +214,140 @@
       } catch (err) {}
     } else if (event.data && event.data.type === "RO_STREAM_FOUND") {
       capturedStreamUrl = event.data.streamUrl;
-      console.log("%c🎬 [Rophim Sniffer] Đã tóm được Link M3U8:", "color: #51f085; font-weight: bold;", capturedStreamUrl);
-      updateHudStreamLink(capturedStreamUrl);
+      console.log("%c🎬 [Cinema Pro Sniffer] M3U8 Stream:", "color: #51f085;", capturedStreamUrl);
+      const btn = document.getElementById("ro-potplayer-btn");
+      if (btn) {
+        btn.style.borderColor = "#51f085";
+        btn.style.color = "#51f085";
+      }
     }
   });
 
-  // Gửi lệnh vào tất cả iframe player
   function sendCommandToPlayer(cmd) {
-    const iframes = document.querySelectorAll("iframe");
-    iframes.forEach(f => {
-      try {
-        f.contentWindow.postMessage(cmd, "*");
-      } catch (e) {}
+    const video = document.querySelector("video");
+    if (video) {
+      if (cmd.type === "RO_CMD_SKIP_INTRO") {
+        video.currentTime = Math.min(video.duration || Infinity, video.currentTime + (cmd.seconds || 85));
+      } else if (cmd.type === "RO_CMD_SET_SPEED") {
+        video.playbackRate = cmd.speed || 1;
+      } else if (cmd.type === "RO_CMD_TOGGLE_HDR") {
+        video.classList.toggle("ro-enhanced-hdr");
+      } else if (cmd.type === "RO_CMD_TOGGLE_PLAY") {
+        if (video.paused) video.play().catch(() => {});
+        else video.pause();
+      } else if (cmd.type === "RO_CMD_MUTE") {
+        video.muted = !video.muted;
+      }
+    }
+    document.querySelectorAll("iframe").forEach(f => {
+      try { f.contentWindow.postMessage(cmd, "*"); } catch (e) {}
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // 🛡️ LAYER 2: ANTI-ADBLOCK & STORAGE SPOOFING
-  // ═══════════════════════════════════════════════════════════════
-  try {
-    window.localStorage.removeItem("probe_until");
-    window.localStorage.setItem("ro_probe_", FUTURE_PROBE_TIMESTAMP);
-    window.sessionStorage.setItem("ro_ad_cap_toast_v1", "current");
-    window.sessionStorage.setItem("popupBannerCount", "999");
-  } catch (e) {}
-
-  try {
-    const origGetItem = Storage.prototype.getItem;
-    Storage.prototype.getItem = function (key) {
-      if (key === "probe_until") return null;
-      if (key === "ro_probe_") return FUTURE_PROBE_TIMESTAMP;
-      return origGetItem.apply(this, arguments);
-    };
-
-    const origSetItem = Storage.prototype.setItem;
-    Storage.prototype.setItem = function (key, value) {
-      if (key === "probe_until") return;
-      return origSetItem.apply(this, arguments);
-    };
-  } catch (e) {}
-
-  const coccocProps = ["disableCCYTAdblockByFeature", "disableCCYTAdblockByQAMode"];
-  coccocProps.forEach(prop => {
-    try {
-      delete document[prop];
-      Object.defineProperty(document, prop, {
-        get: () => undefined,
-        configurable: true
-      });
-    } catch (e) {}
-  });
-
-  // ═══════════════════════════════════════════════════════════════
-  // 🛡️ LAYER 3: AD PROBE SPOOFER & POPUP KILLER
-  // ═══════════════════════════════════════════════════════════════
-  const PROBE_PATTERNS = [
-    "googlesyndication.com",
-    "amazon-adsystem.com",
-    "taboola.com",
-    "facebook.net",
-    "ads-twitter.com"
-  ];
-
-  function isAdProbeUrl(url) {
-    if (typeof url !== "string") return false;
-    return PROBE_PATTERNS.some(p => url.includes(p));
+  function checkAndCaptureUrl(url) {
+    if (!url || typeof url !== "string") return;
+    if (url.includes(".m3u8") || url.includes("master") || url.includes("playlist")) {
+      capturedStreamUrl = url;
+      const btn = document.getElementById("ro-potplayer-btn");
+      if (btn) {
+        btn.style.borderColor = "#51f085";
+        btn.style.color = "#51f085";
+      }
+    }
   }
 
-  try {
-    const origCreateElement = document.createElement.bind(document);
-    document.createElement = function (tagName, options) {
-      const el = origCreateElement(tagName, options);
-      if (tagName && tagName.toLowerCase() === "script") {
-        const origSetAttribute = el.setAttribute.bind(el);
-        el.setAttribute = function (name, val) {
-          if (name === "src" && isAdProbeUrl(val)) {
-            setTimeout(() => {
-              if (typeof el.onload === "function") el.onload(new Event("load"));
-            }, 10);
-          }
-          return origSetAttribute(name, val);
-        };
-
-        let scriptSrc = "";
-        Object.defineProperty(el, "src", {
-          get: () => scriptSrc,
-          set: function (val) {
-            scriptSrc = val;
-            if (isAdProbeUrl(val)) {
-              setTimeout(() => {
-                if (typeof el.onload === "function") el.onload(new Event("load"));
-              }, 10);
-            }
-            origSetAttribute("src", val);
-          },
-          configurable: true
-        });
-      }
-      return el;
-    };
-  } catch (e) {}
-
-  try {
-    document.cookie = "popunderShown=true; path=/; max-age=86400";
-  } catch (e) {}
-
-  window.__roCatfishAdBlockUntil = Date.now() + 864000000000;
-  window.RoAdRotator = {
-    init: () => {},
-    run: () => {},
-    start: () => {},
-    stop: () => {}
+  // Sniff fetch trên trang chính
+  const origFetchMain = window.fetch;
+  window.fetch = async function (input, init) {
+    const url = typeof input === "string" ? input : input?.url || "";
+    checkAndCaptureUrl(url);
+    return handleRophimFetchResponse(origFetchMain.apply(this, arguments), url);
   };
 
-  try {
-    const origOpen = window.open;
-    window.open = function (url, target, features) {
-      if (typeof url === "string") {
-        const isSafe =
-          url.startsWith("/") ||
-          url.includes("rophim") ||
-          url.includes("youtube.com") ||
-          url.includes("youtu.be");
-        if (!isSafe) {
-          console.log("[Rophim Bypass] Popup QC bị chặn:", url);
-          return null;
-        }
-      }
+  const origXhrMain = window.XMLHttpRequest;
+  window.XMLHttpRequest = function () {
+    const xhr = new origXhrMain();
+    const origOpen = xhr.open;
+    let targetUrl = "";
+    xhr.open = function (m, u) {
+      targetUrl = u || "";
+      checkAndCaptureUrl(targetUrl);
       return origOpen.apply(this, arguments);
     };
-  } catch (e) {}
+    
+    const origSend = xhr.send;
+    xhr.send = function () {
+      this.addEventListener("load", function () {
+        handleRophimXhrResponse(xhr, targetUrl);
+      }, { once: true });
+      return origSend.apply(this, arguments);
+    };
+    
+    return xhr;
+  };
 
   // ═══════════════════════════════════════════════════════════════
-  // 🎨 LAYER 4: CUSTOM CSS & THEATER / CINEMA MODE
+  // 🎨 4. CSS DỌN SẠCH QUẢNG CÁO & THEATER MODE TOÀN TRANG
   // ═══════════════════════════════════════════════════════════════
   const css = `
+    /* Xóa sạch mọi banner quảng cáo */
+    .ad-container, .ads-holder, .banner-left, .banner-right,
+    div[id*="ad-"], div[class*="banner-ads"], div[id*="catfish"],
+    .ads-wrapper, #chancoc, .modal-adblock, .adv-holder, .pm-ads,
+    .hh3d-ads, .dp-ads, .tvhay-ads, .ah-ads, #box-ads, .ah-banner,
+    .bl-ads, .a47-ads, .ophim-ads, .biphim-ads, .dhtv-ads,
+    .motphim-ads, .mephim-ads, .ghienphim-ads, .fullphim-ads, .phimhay-ads,
+    [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
+    div[style*="zIndex: 9999999"], div[style*="backdrop-filter: blur(25px)"] {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      pointer-events: none !important;
+    }
+
+    
+      :root {
+        --primary-color: #51f085 !important;
+        --primary-text: #51f085 !important;
+      }
+      .dev.dev-up { color: #51f085 !important; }
+      .tag-imdb { border: 1px solid #51f085 !important; }
+      .tag-imdb:before { color: #51f085 !important; }
+      .app-box-fix { display: none !important; }
+    
+
     html, body {
       overflow: auto !important;
       position: static !important;
     }
 
-    div[style*="z-index: 9999999"],
-    div[style*="zIndex: 9999999"],
-    div[style*="z-index:9999999"],
-    div[style*="backdrop-filter: blur(25px)"],
-    div[style*="backdropFilter: blur(25px)"] {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      z-index: -99999 !important;
+    video.ro-enhanced-hdr {
+      filter: contrast(1.10) saturate(1.25) brightness(1.04) !important;
     }
 
-    :root {
-      --primary-color: #51f085 !important;
-      --primary-text: #51f085 !important;
-    }
-    .dev.dev-up {
-      color: #51f085 !important;
-    }
-    .tag-imdb {
-      border: 1px solid #51f085 !important;
-    }
-    .tag-imdb:before {
-      color: #51f085 !important;
-    }
-    .app-box-fix {
-      display: none !important;
-    }
-
-    /* Rạp Phim Siêu Cấp (Theater Mode) */
     body.ro-theater-active {
       background-color: #050608 !important;
     }
     body.ro-theater-active header,
     body.ro-theater-active footer,
     body.ro-theater-active .sidebar,
-    body.ro-theater-active .comment-section {
+    body.ro-theater-active .sidebar-right,
+    body.ro-theater-active nav {
       opacity: 0.1 !important;
       transition: opacity 0.3s ease;
     }
     body.ro-theater-active header:hover,
-    body.ro-theater-active footer:hover {
+    body.ro-theater-active footer:hover,
+    body.ro-theater-active nav:hover {
       opacity: 1 !important;
     }
-    body.ro-theater-active .ratio-16x9 {
+    body.ro-theater-active .player-wrapper,
+    body.ro-theater-active .player-container,
+    body.ro-theater-active #player,
+    body.ro-theater-active iframe {
       max-height: 88vh !important;
       box-shadow: 0 10px 50px rgba(81, 240, 133, 0.25) !important;
       border-radius: 14px;
-      transition: all 0.3s ease;
     }
 
     /* VIP Floating Control Hub */
@@ -371,77 +355,72 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      z-index: 999999;
+      z-index: 2147483647;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    #ro-vip-hub-btn {
+    #ro-hub-toggle {
       width: 48px;
       height: 48px;
       border-radius: 50%;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.45);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
-      cursor: pointer;
-      font-size: 20px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      font-size: 24px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       user-select: none;
     }
-    #ro-vip-hub-btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.65);
+    #ro-hub-toggle:hover {
+      transform: scale(1.1) rotate(10deg);
+      box-shadow: 0 6px 26px rgba(16, 185, 129, 0.65);
     }
-    #ro-vip-menu {
-      position: absolute;
-      bottom: 58px;
-      right: 0;
-      width: 290px;
-      background: rgba(18, 20, 26, 0.95);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
-      color: #fff;
+    #ro-hub-menu {
       display: none;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 14px;
+      width: 290px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
       flex-direction: column;
-      gap: 10px;
-      animation: ro-fade-in 0.2s ease-out;
+      gap: 8px;
+      color: #e2e8f0;
     }
-    #ro-vip-menu.active {
+    #ro-hub-menu.show {
       display: flex;
+      animation: roFadeIn 0.2s ease-out;
     }
-    .ro-menu-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #51f085;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 8px;
+    @keyframes roFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .ro-menu-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      color: #e4e4e7;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f1f5f9;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
+      transition: all 0.15s ease;
+      text-align: left;
     }
     .ro-menu-btn:hover {
-      background: rgba(81, 240, 133, 0.15);
-      border-color: #51f085;
-      color: #fff;
+      background: rgba(16, 185, 129, 0.18);
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(-2px);
     }
     .ro-badge {
       font-size: 10px;
@@ -450,83 +429,78 @@
       background: rgba(255, 255, 255, 0.1);
       color: #a1a1aa;
     }
-    /* OSD Toast Notification */
-    #ro-toast {
+    .ro-toast {
       position: fixed;
-      top: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(81, 240, 133, 0.4);
+      top: 24px;
+      right: 24px;
+      z-index: 2147483647;
+      background: rgba(15, 23, 42, 0.95);
       color: #51f085;
-      padding: 10px 22px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 700;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
-      z-index: 10000000;
-      opacity: 0;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(81, 240, 133, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      font-size: 14px;
+      font-weight: 600;
       pointer-events: none;
-      transition: opacity 0.25s, transform 0.25s;
+      animation: roToastAnim 2.2s forwards;
     }
-    #ro-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-    @keyframes ro-fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes roToastAnim {
+      0% { opacity: 0; transform: translateY(-10px); }
+      15% { opacity: 1; transform: translateY(0); }
+      80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
     }
   `;
 
-  let cssInjected = false;
-  function injectCSSOnce() {
-    if (cssInjected) return;
-    cssInjected = true;
-    const style = document.createElement("style");
-    style.id = "rophim-vip-style";
-    style.textContent = css;
-    (document.head || document.documentElement).appendChild(style);
-  }
+  const styleEl = document.createElement("style");
+  styleEl.textContent = css;
+  (document.head || document.documentElement).appendChild(styleEl);
 
-  if (document.head || document.documentElement) injectCSSOnce();
-  else document.addEventListener("DOMContentLoaded", injectCSSOnce, { once: true });
-
-  // ═══════════════════════════════════════════════════════════════
-  // 🌟 LAYER 5: PRO VIP HUD & KEYBOARD SHORTCUTS
-  // ═══════════════════════════════════════════════════════════════
-  let toastTimer = null;
   function showToast(msg) {
-    let t = document.getElementById("ro-toast");
-    if (!t) {
-      t = document.createElement("div");
-      t.id = "ro-toast";
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      t.classList.remove("show");
-    }, 2200);
+    const t = document.createElement("div");
+    t.className = "ro-toast";
+    t.innerHTML = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2200);
   }
 
-  function toggleTheaterMode() {
-    isTheaterMode = !isTheaterMode;
-    document.body.classList.toggle("ro-theater-active", isTheaterMode);
-    showToast(isTheaterMode ? "🎭 Đã bật Chế độ Rạp phim (Theater Mode)" : "🎭 Đã tắt Chế độ Rạp phim");
+  function skipIntro(sec = 85) {
+    sendCommandToPlayer({ type: "RO_CMD_SKIP_INTRO", seconds: sec });
+    showToast(`⏭️ Đã tua Intro: +${sec}s`);
   }
 
   function toggleHdr() {
     isHdrEnabled = !isHdrEnabled;
     sendCommandToPlayer({ type: "RO_CMD_TOGGLE_HDR" });
-    showToast(isHdrEnabled ? "✨ Đã bật Bộ lọc màu Anime OLED (HDR)" : "✨ Đã tắt Bộ lọc màu");
+    showToast(isHdrEnabled ? "✨ Anime OLED HDR: BẬT" : "🌑 OLED HDR: TẮT");
   }
 
-  function skipIntro() {
-    sendCommandToPlayer({ type: "RO_CMD_SKIP_INTRO", seconds: 85 });
-    showToast("⏭️ Đã tua qua Intro 85 giây");
+  function toggleTheater() {
+    isTheaterMode = !isTheaterMode;
+    document.body.classList.toggle("ro-theater-active", isTheaterMode);
+    showToast(isTheaterMode ? "🎭 Chế độ Rạp phim: BẬT" : "🎭 Chế độ Rạp phim: TẮT");
+  }
+
+  function openPotPlayer() {
+    if (!capturedStreamUrl) {
+      showToast("⚠️ Đang chờ bắt link video, hãy bấm Play trước!");
+      return;
+    }
+    window.location.href = `potplayer://${capturedStreamUrl}`;
+    showToast("🚀 Đang mở PotPlayer...");
+  }
+
+  function copyM3u8() {
+    if (!capturedStreamUrl) {
+      showToast("⚠️ Chưa có link M3U8, hãy bấm Play phim trước!");
+      return;
+    }
+    navigator.clipboard.writeText(capturedStreamUrl).then(() => {
+      showToast("📋 Đã copy link M3U8 vào Clipboard!");
+    }).catch(() => {
+      showToast("Link M3U8: " + capturedStreamUrl.slice(0, 40) + "...");
+    });
   }
 
   function adjustSpeed(delta) {
@@ -539,66 +513,35 @@
     showToast(`⚡ Tốc độ phát: ${currentSpeed}x`);
   }
 
-  function openInPotPlayer() {
-    if (!capturedStreamUrl) {
-      showToast("⏳ Đang dò tìm luồng M3U8... Vui lòng bấm phát video trước!");
-      return;
-    }
-    showToast("🚀 Đang mở luồng stream bằng PotPlayer...");
-    window.location.href = `potplayer://${capturedStreamUrl}`;
-  }
-
-  function copyM3u8() {
-    if (!capturedStreamUrl) {
-      showToast("⏳ Chưa bắt được luồng stream, hãy bấm Play video trước!");
-      return;
-    }
-    navigator.clipboard.writeText(capturedStreamUrl).then(() => {
-      showToast("📋 Đã sao chép Link M3U8 vào Clipboard!");
-    }).catch(() => {
-      showToast("Link M3U8: " + capturedStreamUrl.slice(0, 40) + "...");
-    });
-  }
-
-  function updateHudStreamLink(url) {
-    const btn = document.getElementById("ro-potplayer-btn");
-    if (btn) {
-      btn.style.borderColor = "#51f085";
-      btn.style.color = "#51f085";
-    }
-  }
-
-  // Khởi tạo Floating HUD Menu
   function initVipHub() {
     if (document.getElementById("ro-vip-hub")) return;
     const hub = document.createElement("div");
     hub.id = "ro-vip-hub";
     hub.innerHTML = `
-      <div id="ro-vip-hub-btn" title="Rophim VIP Control Hub">👑</div>
-      <div id="ro-vip-menu">
-        <div class="ro-menu-title">
-          <span>🎬 ROPHIM VIP PRO SUITE</span>
-          <span style="font-size: 10px; color: #a1a1aa;">v3.5</span>
+      <div id="ro-hub-menu">
+        <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #51f085; display: flex; justify-content: space-between;">
+          <span>🎬 Cinema Pro (All-In-One)</span>
+          <span style="font-size: 11px; opacity: 0.7;">v4.5</span>
         </div>
-        <button class="ro-menu-btn" id="ro-skip-btn">
-          <span>⏭️ Bỏ qua Intro bài hát (+85s)</span>
+        <button class="ro-menu-btn" id="ro-potplayer-btn">
+          <span>🚀 Mở Bằng PotPlayer</span>
+          <span class="ro-badge">Direct</span>
+        </button>
+        <button class="ro-menu-btn" id="ro-copym3u8-btn">
+          <span>📋 Sao Chép Link M3U8</span>
+          <span class="ro-badge">IDM</span>
+        </button>
+        <button class="ro-menu-btn" id="ro-skipintro-btn">
+          <span>⏭️ Bỏ Qua Intro 85s</span>
           <span class="ro-badge">Phím S</span>
         </button>
         <button class="ro-menu-btn" id="ro-hdr-btn">
-          <span>✨ Anime OLED HDR Enhancer</span>
+          <span>✨ Anime OLED HDR</span>
           <span class="ro-badge">Phím E</span>
         </button>
         <button class="ro-menu-btn" id="ro-theater-btn">
-          <span>🎭 Chế độ Rạp phim (Theater)</span>
+          <span>🎭 Chế Độ Rạp Phim</span>
           <span class="ro-badge">Phím T</span>
-        </button>
-        <button class="ro-menu-btn" id="ro-potplayer-btn">
-          <span>📺 Mở bằng PotPlayer (Direct)</span>
-          <span class="ro-badge">M3U8</span>
-        </button>
-        <button class="ro-menu-btn" id="ro-copy-btn">
-          <span>📋 Sao chép Link M3U8 Stream</span>
-          <span class="ro-badge">IDM</span>
         </button>
         <div style="display: flex; gap: 8px; margin-top: 4px;">
           <button class="ro-menu-btn" id="ro-speed-down" style="flex: 1; justify-content: center;">
@@ -609,32 +552,39 @@
           </button>
         </div>
       </div>
+      <div id="ro-hub-toggle" title="Cinema Pro Control Hub">👑</div>
     `;
     document.body.appendChild(hub);
 
-    const hubBtn = document.getElementById("ro-vip-hub-btn");
-    const menu = document.getElementById("ro-vip-menu");
+    const toggle = hub.querySelector("#ro-hub-toggle");
+    const menu = hub.querySelector("#ro-hub-menu");
+    if (toggle && menu) {
+      toggle.onclick = (e) => {
+        e.stopPropagation();
+        menu.classList.toggle("show");
+      };
+      document.addEventListener("click", () => menu.classList.remove("show"));
+      menu.addEventListener("click", (e) => e.stopPropagation());
+    }
 
-    hubBtn.addEventListener("click", () => menu.classList.toggle("active"));
-    document.addEventListener("click", (e) => {
-      if (!hub.contains(e.target)) menu.classList.remove("active");
-    });
+    const bind = (id, fn) => {
+      const el = hub.querySelector("#" + id) || document.getElementById(id);
+      if (el) el.addEventListener("click", fn);
+    };
 
-    document.getElementById("ro-skip-btn").addEventListener("click", skipIntro);
-    document.getElementById("ro-hdr-btn").addEventListener("click", toggleHdr);
-    document.getElementById("ro-theater-btn").addEventListener("click", toggleTheaterMode);
-    document.getElementById("ro-potplayer-btn").addEventListener("click", openInPotPlayer);
-    document.getElementById("ro-copy-btn").addEventListener("click", copyM3u8);
-    document.getElementById("ro-speed-down").addEventListener("click", () => adjustSpeed(-1));
-    document.getElementById("ro-speed-up").addEventListener("click", () => adjustSpeed(1));
+    bind("ro-potplayer-btn", openPotPlayer);
+    bind("ro-copym3u8-btn", copyM3u8);
+    bind("ro-skipintro-btn", () => skipIntro());
+    bind("ro-hdr-btn", toggleHdr);
+    bind("ro-theater-btn", toggleTheater);
+    bind("ro-speed-down", () => adjustSpeed(-1));
+    bind("ro-speed-up", () => adjustSpeed(1));
   }
 
-  // Đăng ký bộ phím tắt thần thánh Pro Hotkeys
+  // Phím tắt toàn cục
   window.addEventListener("keydown", function (e) {
-    // Không nhận phím tắt khi người dùng đang gõ trong input/textarea
-    const tag = document.activeElement?.tagName?.toLowerCase();
-    if (tag === "input" || tag === "textarea") return;
-
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+    if (tag === "input" || tag === "textarea" || e.target?.isContentEditable) return;
     const key = e.key.toLowerCase();
     if (key === "s" || key === "i") {
       e.preventDefault();
@@ -644,49 +594,48 @@
       toggleHdr();
     } else if (key === "t") {
       e.preventDefault();
-      toggleTheaterMode();
+      toggleTheater();
     } else if (e.key === "[") {
       e.preventDefault();
       adjustSpeed(-1);
     } else if (e.key === "]") {
       e.preventDefault();
       adjustSpeed(1);
+    } else if (e.key === " " && !e.repeat) {
+      e.preventDefault();
+      sendCommandToPlayer({ type: "RO_CMD_TOGGLE_PLAY" });
+    } else if (key === "m") {
+      e.preventDefault();
+      sendCommandToPlayer({ type: "RO_CMD_MUTE" });
     }
   });
 
   if (document.body) initVipHub();
   else document.addEventListener("DOMContentLoaded", initVipHub, { once: true });
 
+  
   // ═══════════════════════════════════════════════════════════════
-  // 🎯 LAYER 6: VIP & T-COIN BACKEND RESPONSE PATCHER
+  // 🎯 LAYER 5: VIP 2099 & T-COIN RESPONSE PATCHER (ROPHIM API)
   // ═══════════════════════════════════════════════════════════════
-  const TARGET_KEYWORDS = [
+  const VIP_EXPIRY_DATE = new Date(2099, 6, 18, 0, 0, 0);
+  const VIP_EXPIRY_TIMESTAMP = Math.floor(VIP_EXPIRY_DATE.getTime() / 1000);
+  const COIN_BALANCE = 999999999;
+  const ROPHIM_KEYWORDS = [
     "/baseapi/api/v1/tcoin/me",
     "/baseapi/api/v1/user/",
     "/baseapi/api/v1/vip/",
     "/api/auth/session",
     "api.rophim1.vip",
-    "rophimapi.net/v1/user/info",
-    "rophimapi.net/v1/user/updateProfile",
-    "rophimapi.net/v1/auth/login",
-    "rophimapi.net/v1/user/profile",
-    "rophimapi.net/v1/vip/check",
-    "rophimapi.net/v1/vip/status",
-    "rophimapi.net/v2/user/info",
-    "rophimapi.net/v2/user/profile"
+    "rophimapi.net"
   ];
 
-  function isTargetUrl(url) {
+  function isRophimTarget(url) {
     if (!url || typeof url !== "string") return false;
-    for (let i = 0; i < TARGET_KEYWORDS.length; i++) {
-      if (url.includes(TARGET_KEYWORDS[i])) return true;
-    }
-    return false;
+    return ROPHIM_KEYWORDS.some(k => url.includes(k));
   }
 
-  function patchUserInfo(data, url) {
+  function patchRophimData(data, url) {
     if (!data || typeof data !== "object") return data;
-
     if (url && url.includes("/tcoin/me")) {
       data.thungBalance = COIN_BALANCE;
       data.balance = COIN_BALANCE;
@@ -694,125 +643,64 @@
       data.total = COIN_BALANCE;
       return data;
     }
-
-    if (url && url.includes("/api/auth/session")) {
-      if (data.user) {
-        data.user.is_vip = true;
-        data.user.vip_expires_at = VIP_EXPIRY_TIMESTAMP;
-        data.user.thungBalance = COIN_BALANCE;
-        data.user.coin_balance = COIN_BALANCE;
-        data.user.role = "VIP";
-      }
+    if (url && (url.includes("/api/auth/session") || url.includes("/user/profile") || url.includes("/user/info"))) {
+      if (!data.user) data.user = {};
+      data.user.is_vip = true;
+      data.user.vip_expires_at = VIP_EXPIRY_TIMESTAMP;
+      data.user.thungBalance = COIN_BALANCE;
+      data.user.coin_balance = COIN_BALANCE;
+      data.user.role = "VIP";
       data.expires = VIP_EXPIRY_DATE.toISOString();
       return data;
     }
-
-    const patchObject = obj => {
+    const recurse = obj => {
       if (!obj || typeof obj !== "object") return;
-
-      if (
-        "is_vip" in obj ||
-        "vip_expires_at" in obj ||
-        "coin_balance" in obj ||
-        "thungBalance" in obj ||
-        "user" in obj
-      ) {
+      if ("is_vip" in obj || "vip_expires_at" in obj || "coin_balance" in obj || "thungBalance" in obj) {
         obj.is_vip = true;
         obj.vip_expires_at = VIP_EXPIRY_TIMESTAMP;
         obj.coin_balance = COIN_BALANCE;
         obj.thungBalance = COIN_BALANCE;
       }
-
-      if (obj.result && typeof obj.result === "object") patchObject(obj.result);
-      if (obj.user && typeof obj.user === "object") patchObject(obj.user);
-      if (obj.data && typeof obj.data === "object") patchObject(obj.data);
+      if (obj.result) recurse(obj.result);
+      if (obj.user) recurse(obj.user);
+      if (obj.data) recurse(obj.data);
     };
-
-    patchObject(data);
-    injectCSSOnce();
+    recurse(data);
     return data;
   }
 
-  async function handleJsonResponse(res, url) {
-    if (!isTargetUrl(url)) return res;
-
+  async function handleRophimFetchResponse(resPromise, url) {
+    const res = await resPromise;
+    if (!isRophimTarget(url)) return res;
     try {
-      const contentType = res.headers.get("content-type");
-      if (!contentType?.includes("application/json")) return res;
-
+      const ct = res.headers.get("content-type");
+      if (!ct || !ct.includes("application/json")) return res;
       const clone = res.clone();
       const data = await clone.json();
-      const patched = patchUserInfo(data, url);
-
+      const patched = patchRophimData(data, url);
       return new Response(JSON.stringify(patched), {
         status: res.status,
         statusText: res.statusText,
         headers: res.headers
       });
-    } catch (error) {
+    } catch (e) {
       return res;
     }
   }
 
-  const realFetch = window.fetch;
-  window.fetch = async function (input, init) {
-    let url = "";
+  function handleRophimXhrResponse(xhr, url) {
+    if (!isRophimTarget(url)) return;
     try {
-      url = typeof input === "string" ? input : input?.url || "";
-    } catch (e) {
-      url = "";
-    }
+      const ct = xhr.getResponseHeader("content-type");
+      if (!ct || !ct.includes("application/json")) return;
+      const data = JSON.parse(xhr.responseText);
+      const patched = patchRophimData(data, url);
+      const str = JSON.stringify(patched);
+      Object.defineProperty(xhr, "responseText", { value: str, configurable: true, writable: true });
+      Object.defineProperty(xhr, "response", { value: str, configurable: true, writable: true });
+    } catch (e) {}
+  }
+  
 
-    const res = await realFetch.apply(this, arguments);
-    return handleJsonResponse(res, url);
-  };
-
-  const RealXHR = window.XMLHttpRequest;
-  window.XMLHttpRequest = function () {
-    const xhr = new RealXHR();
-    let targetUrl = "";
-
-    const origOpen = xhr.open;
-    xhr.open = function (method, url, async, user, pass) {
-      targetUrl = url || "";
-      return origOpen.apply(this, arguments);
-    };
-
-    const origSend = xhr.send;
-    xhr.send = function () {
-      const loadHandler = function () {
-        if (!isTargetUrl(targetUrl)) return;
-
-        try {
-          const contentType = xhr.getResponseHeader("content-type");
-          if (!contentType?.includes("application/json")) return;
-
-          const data = JSON.parse(xhr.responseText);
-          const patched = patchUserInfo(data, targetUrl);
-          const patchedText = JSON.stringify(patched);
-
-          Object.defineProperty(xhr, "responseText", {
-            writable: true,
-            configurable: true,
-            value: patchedText
-          });
-          Object.defineProperty(xhr, "response", {
-            writable: true,
-            configurable: true,
-            value: patchedText
-          });
-        } catch (error) {}
-      };
-
-      this.addEventListener("load", loadHandler, { once: true });
-      return origSend.apply(this, arguments);
-    };
-
-    return xhr;
-  };
-
-  console.log(
-    "%c🎬 Rophim VIP & Cinema Pro Suite v3.5 Ready!",
-    "font-size: 14px; font-weight: bold; color: #51f085;"
-  );
+  console.log("%c🎬 " + "Cinema Pro Suite (All-In-One) - Kho Phim & Anime Việt Nam" + " Ready!", "font-size: 13px; font-weight: bold; color: #10b981;");
 })();
