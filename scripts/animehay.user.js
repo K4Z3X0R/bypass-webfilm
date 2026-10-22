@@ -4,7 +4,7 @@
 
 // @namespace    http://tampermonkey.net/
 
-// @version      4.5
+// @version      5.0
 
 // @description  Diệt sạch quảng cáo AnimeHay & VuiGhe + Sniff M3U8 PotPlayer/VLC + Skip Intro 85s + Anime OLED HDR rực rỡ
 
@@ -45,6 +45,15 @@
 // @match        *://*.streamwish.com/*
 // @match        *://*.filelions.to/*
 // @match        *://*.filelions.com/*
+// @match        *://*.streamsilk.com/*
+// @match        *://*.streamruby.com/*
+// @match        *://*.streamhide.to/*
+// @match        *://*.vidguard.to/*
+// @match        *://*.2embed.org/*
+// @match        *://*.vidsrc.xyz/*
+// @match        *://*.vidsrc.net/*
+// @match        *://*.fembed9hd.com/*
+// @match        *://*.feurl.com/*
 
 // @allFrames    true
 
@@ -827,6 +836,8 @@
     .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
 
     .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads, .ts-ads, .ss-ads,
+    .pc-ads, .lp-ads, .pn-ads, .hg-ads, .pk-ads, .cp-ads, .bn-ads,
+    .ka-ads, .am-ads, .ac-ads, .va-ads, .xp-ads, .pb-ads, .tz-ads, .pcr-ads,
 
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
 
@@ -1246,6 +1257,11 @@
 
 
 
+  function togglePip() {
+    sendCommandToPlayer({ type: "RO_CMD_PIP" });
+    showToast("🖼️ Toggle Picture-in-Picture");
+  }
+
   function openPotPlayer() {
 
     if (!capturedStreamUrl) {
@@ -1380,7 +1396,7 @@
 
           <span>🎬 AnimeHay & VuiGhe VIP & Cinema Pro Suite</span>
 
-          <span style="font-size: 11px; opacity: 0.7;">v4.5</span>
+          <span style="font-size: 11px; opacity: 0.7;">v5.0</span>
 
         </div>
 
@@ -1532,6 +1548,7 @@
 
     bind("ro-skipintro-btn", () => skipIntro(85));
 
+    bind("ro-pip-btn", togglePip);
     bind("ro-fullscreen-btn", toggleFullscreen);
 
     bind("ro-hdr-btn", toggleHdr);

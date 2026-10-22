@@ -3,7 +3,7 @@ const path = require("path");
 const vm = require("vm");
 
 console.log("================================================================");
-console.log("🎬 GRANDMASTER VERIFICATION HARNESS - CINEMA PRO SUITE v4.5");
+console.log("🎬 GRANDMASTER VERIFICATION HARNESS - CINEMA PRO SUITE v5.0");
 console.log("================================================================\n");
 
 const SCRIPT_DIR = path.join(__dirname, "scripts");
@@ -374,7 +374,7 @@ scriptFiles.forEach(file => {
       "ro-vol-down", "ro-vol-up", "ro-speed-down", "ro-speed-up"
     ];
     const allBtnsExist = Boolean(hub && allBtnIds.every(id => document.getElementById(id) !== null));
-    report(`${file}: VIP Hub (#ro-vip-hub) & all 12 Control Buttons bound`, allBtnsExist);
+    report(`${file}: VIP Hub (#ro-vip-hub) & all 13 Control Buttons bound`, allBtnsExist);
 
     // Test 2.2: Ad popup neutralization + Legitimate URL allowed
     const blockedAd = window.open("https://bad-popup-ads.xyz/click");
@@ -449,7 +449,7 @@ scriptFiles.forEach(file => {
       videoElem.currentTime === 500 && // '5' key jumped to 50% of 1000s
       videoElem.classList.contains("ro-enhanced-hdr") &&
       body.classList.contains("ro-theater-active");
-    report(`${file}: 14 Hotkeys & Direct Video DOM Mutation verified`, hotkeysPassed && videoControlled);
+    report(`${file}: 18 Hotkeys & Direct Video DOM Mutation verified`, hotkeysPassed && videoControlled);
 
   } catch (err) {
     report(`${file}: Top Window execution error`, false, err.stack);

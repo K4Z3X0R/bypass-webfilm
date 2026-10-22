@@ -4,9 +4,9 @@
 
 // @namespace    http://tampermonkey.net/
 
-// @version      4.5
+// @version      5.0
 
-// @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer/VLC + Phím tắt Tua 5s/Intro 85s/Volume & Anime HDR trên hơn 37+ website phim, anime, hoạt hình 3D Việt Nam!
+// @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer/VLC + Phím tắt Tua 5s/Intro 85s/Volume & Anime HDR trên hơn 52+ website phim, anime, hoạt hình 3D Việt Nam!
 
 // @author       ekaznyra
 
@@ -186,6 +186,68 @@
 // @match        *://*.ssphim.tv/*
 // @match        *://*.ssphim.org/*
 // @match        *://*.ssphim.cc/*
+// @match        *://*.phimchill.org/*
+// @match        *://*.phimchilla.tv/*
+// @match        *://*.phimchilli.net/*
+// @match        *://*.luotphim.net/*
+// @match        *://*.luotphim.tv/*
+// @match        *://*.luotphim.cc/*
+// @match        *://*.luotphim.org/*
+// @match        *://*.luotphim.com/*
+// @match        *://*.phimnhanh.tv/*
+// @match        *://*.phimnhanh.net/*
+// @match        *://*.phimnhanh.io/*
+// @match        *://*.phimnhanhtv.net/*
+// @match        *://*.phimnhanh.org/*
+// @match        *://*.hayghe.tv/*
+// @match        *://*.hayghe.net/*
+// @match        *://*.hayghe.org/*
+// @match        *://*.hayghetv.com/*
+// @match        *://*.hayghe.cc/*
+// @match        *://*.phimko.net/*
+// @match        *://*.phimko.com/*
+// @match        *://*.phimko.tv/*
+// @match        *://*.phimko.org/*
+// @match        *://*.cuongphim.com/*
+// @match        *://*.cuongphim.net/*
+// @match        *://*.cuongphim.tv/*
+// @match        *://*.cuongphim.org/*
+// @match        *://*.bongngo.tv/*
+// @match        *://*.bongngo.net/*
+// @match        *://*.bongngotv.com/*
+// @match        *://*.bongngo.org/*
+// @match        *://*.khoanime.tv/*
+// @match        *://*.khoanime.net/*
+// @match        *://*.khoanime.com/*
+// @match        *://*.khoanime.org/*
+// @match        *://*.animemoi.com/*
+// @match        *://*.animemoi.net/*
+// @match        *://*.animemoi.tv/*
+// @match        *://*.animemoi.org/*
+// @match        *://*.animechill.net/*
+// @match        *://*.animechill.tv/*
+// @match        *://*.animechill.org/*
+// @match        *://*.animechill.cc/*
+// @match        *://*.vietanime.net/*
+// @match        *://*.vietanime.tv/*
+// @match        *://*.vietanime.org/*
+// @match        *://*.vietanime.com/*
+// @match        *://*.xomphim.tv/*
+// @match        *://*.xomphim.net/*
+// @match        *://*.xomphim.com/*
+// @match        *://*.xomphim.org/*
+// @match        *://*.phimbom.tv/*
+// @match        *://*.phimbom.net/*
+// @match        *://*.phimbom.org/*
+// @match        *://*.phimbom.cc/*
+// @match        *://*.tvzing.net/*
+// @match        *://*.tvzing.tv/*
+// @match        *://*.zingtv.com/*
+// @match        *://*.zingtv.net/*
+// @match        *://*.phimchieurap.tv/*
+// @match        *://*.phimchieurap.net/*
+// @match        *://*.phimchieurap.org/*
+// @match        *://*.phimchieurap.vip/*
 // @match        *://*.streamc.xyz/*
 // @match        *://embed*.streamc.xyz/*
 // @match        *://*.stream*.xyz/*
@@ -212,6 +274,15 @@
 // @match        *://*.streamwish.com/*
 // @match        *://*.filelions.to/*
 // @match        *://*.filelions.com/*
+// @match        *://*.streamsilk.com/*
+// @match        *://*.streamruby.com/*
+// @match        *://*.streamhide.to/*
+// @match        *://*.vidguard.to/*
+// @match        *://*.2embed.org/*
+// @match        *://*.vidsrc.xyz/*
+// @match        *://*.vidsrc.net/*
+// @match        *://*.fembed9hd.com/*
+// @match        *://*.feurl.com/*
 
 // @allFrames    true
 
@@ -1010,6 +1081,8 @@
     .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
 
     .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads, .ts-ads, .ss-ads,
+    .pc-ads, .lp-ads, .pn-ads, .hg-ads, .pk-ads, .cp-ads, .bn-ads,
+    .ka-ads, .am-ads, .ac-ads, .va-ads, .xp-ads, .pb-ads, .tz-ads, .pcr-ads,
 
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
 
@@ -1447,6 +1520,11 @@
 
 
 
+  function togglePip() {
+    sendCommandToPlayer({ type: "RO_CMD_PIP" });
+    showToast("🖼️ Toggle Picture-in-Picture");
+  }
+
   function openPotPlayer() {
 
     if (!capturedStreamUrl) {
@@ -1581,7 +1659,7 @@
 
           <span>🎬 Cinema Pro (All-In-One)</span>
 
-          <span style="font-size: 11px; opacity: 0.7;">v4.5</span>
+          <span style="font-size: 11px; opacity: 0.7;">v5.0</span>
 
         </div>
 
@@ -1733,6 +1811,7 @@
 
     bind("ro-skipintro-btn", () => skipIntro(85));
 
+    bind("ro-pip-btn", togglePip);
     bind("ro-fullscreen-btn", toggleFullscreen);
 
     bind("ro-hdr-btn", toggleHdr);
