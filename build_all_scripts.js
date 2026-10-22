@@ -710,6 +710,230 @@ const SITE_DEFINITIONS = [
     ],
     siteCss: ".ad-container, .ads-holder, div[id*=\"ad_\"], .banner-top, .banner-bottom, .modal-adblock, .pcr-ads"
   }
+,
+  {
+    id: "fimfast",
+    name: "FimFast VIP & Cinema Pro Suite",
+    file: "fimfast.user.js",
+    desc: "Chặn 100% quảng cáo FimFast + Sniff M3U8 PotPlayer/VLC + Bỏ qua Intro 85s + Chế độ rạp phim Cinema Mode",
+    version: "5.0",
+    domains: [
+          "*://*.fimfast.com/*",
+          "*://*.fimfast.tv/*",
+          "*://*.fimfast.net/*",
+          "*://*.fimfast.org/*"
+    ],
+    siteCss: ".ad-container, .ads-holder, div[id*=\"ad_\"], .banner-top, .banner-bottom, .modal-adblock, .ff-ads"
+  },
+  {
+    id: "hdviet",
+    name: "HDViet VIP & Cinema Pro Suite",
+    file: "hdviet.user.js",
+    desc: "Mở khóa VIP HDViet + Diệt sạch popup & banner quảng cáo + Sniff link M3U8 PotPlayer/VLC + Skip Intro 85s",
+    version: "5.0",
+    domains: [
+          "*://*.hdviet.com/*",
+          "*://movies.hdviet.com/*",
+          "*://*.hdviet.net/*",
+          "*://*.hdviet.tv/*"
+    ],
+    siteCss: ".banner-ads, #box-ads, div[class*=\"ad_box\"], .ads-placement, #catfish, .modal-adblock, .hdv-ads"
+  },
+  {
+    id: "phimplay",
+    name: "PhimPlay VIP & Cinema Pro Suite",
+    file: "phimplay.user.js",
+    desc: "Chặn 100% quảng cáo PhimPlay + Vô hiệu hóa Stream Guard + Bắt link M3U8 PotPlayer/VLC + Phím tắt Tua 5s & Rạp phim",
+    version: "5.0",
+    domains: [
+          "*://*.phimplay.net/*",
+          "*://*.phimplay.tv/*",
+          "*://*.phimplay.org/*",
+          "*://*.phimplay.com/*"
+    ],
+    siteCss: ".ad-container, .ads-holder, .banner-left, .banner-right, div[id*=\"ad-\"], div[class*=\"banner-ads\"], div[id*=\"catfish\"], .ads-wrapper, #chancoc, .modal-adblock, .pp-ads"
+  },
+  {
+    id: "phimgi",
+    name: "PhimGi VIP & Cinema Pro Suite",
+    file: "phimgi.user.js",
+    desc: "Diệt sạch quảng cáo Phim Gì + Sniff luồng M3U8 PotPlayer/VLC + Tua bài hát Intro 85s + Anime OLED HDR rực rỡ",
+    version: "5.0",
+    domains: [
+          "*://*.phimgi.net/*",
+          "*://*.phimgi.tv/*",
+          "*://*.phimgi.cc/*",
+          "*://*.phimgi.com/*"
+    ],
+    siteCss: ".ad-banner, .banner-ads, #box-ads, div[id*=\"ad_\"], div[class*=\"ad_box\"], .ads-placement, #catfish, .modal-adblock, .pg-ads"
+  },
+  {
+    id: "kphim",
+    name: "KPhim VIP & Cinema Pro Suite",
+    file: "kphim.user.js",
+    desc: "Chặn quảng cáo KPhim Phim Hàn Quốc + Tóm link M3U8 PotPlayer/VLC + Skip Intro 85s + Chế độ rạp phim Cinema Mode",
+    version: "5.0",
+    domains: [
+          "*://*.kphim.tv/*",
+          "*://*.kphim.net/*",
+          "*://*.kphim.co/*",
+          "*://*.kphim.org/*"
+    ],
+    siteCss: ".ad-holder, .ads-banner, div[id*=\"ad-\"], div[class*=\"ads-\"], .catfish, .modal-adblock, .kp-ads"
+  },
+  {
+    id: "animez",
+    name: "AnimeZ VIP & Cinema Pro Suite",
+    file: "animez.user.js",
+    desc: "Chặn 100% quảng cáo AnimeZ + Bắt M3U8 PotPlayer/VLC + Tua Intro bài hát 85s + Bộ lọc Anime OLED HDR rực rỡ",
+    version: "5.0",
+    domains: [
+          "*://*.animez.tv/*",
+          "*://*.animez.net/*",
+          "*://*.animez.org/*",
+          "*://*.animez.com/*"
+    ],
+    siteCss: "#ad_top, #ad_bottom, .ad-banner, .catfish-banner, div[class*=\"qc_\"], .anti-adblock-alert, #overlay-banner, .az-ads"
+  },
+  {
+    id: "phimhub",
+    name: "PhimHub VIP & Cinema Pro Suite",
+    file: "phimhub.user.js",
+    desc: "Chặn sạch popup PhimHub + Vô hiệu hóa Stream Guard + Bắt link M3U8 PotPlayer/VLC + Skip Intro 85s",
+    version: "5.0",
+    domains: [
+          "*://*.phimhub.tv/*",
+          "*://*.phimhub.net/*",
+          "*://*.phimhub.org/*",
+          "*://*.phimhub.co/*"
+    ],
+    siteCss: ".ad-container, .banner-ads, div[id*=\"ad_\"], .ads-placement, .anti-adblock, .modal-adblock, .ph-ads"
+  },
+  {
+    id: "phimvietsub",
+    name: "PhimVietsub VIP & Cinema Pro Suite",
+    file: "phimvietsub.user.js",
+    desc: "Chặn 100% quảng cáo PhimVietsub + Sniff luồng M3U8 PotPlayer/VLC + Phím tắt Tua 5s/Skip Intro + Rạp phim Cinema Mode",
+    version: "5.0",
+    domains: [
+          "*://*.phimvietsub.org/*",
+          "*://*.phimvietsub.net/*",
+          "*://*.phimvietsub.tv/*",
+          "*://*.phimvietsub.com/*"
+    ],
+    siteCss: ".ad-banner, .banner-ads, #box-ads, div[class*=\"ad_box\"], .catfish, .modal-adblock, .pvs-ads"
+  },
+  {
+    id: "motanime",
+    name: "MotAnime VIP & Cinema Pro Suite",
+    file: "motanime.user.js",
+    desc: "Chặn quảng cáo Mọt Anime + Vô hiệu hóa Stream Guard + Bắt link M3U8 PotPlayer/VLC + Tua bài hát Intro 85s & Anime HDR",
+    version: "5.0",
+    domains: [
+          "*://*.motanime.tv/*",
+          "*://*.motanime.net/*",
+          "*://*.motanime.org/*",
+          "*://*.motanime.com/*"
+    ],
+    siteCss: "#ad_top, #ad_bottom, .ad-banner, div[id*=\"adv_\"], .catfish-banner, .anti-adblock-alert, .ma-ads"
+  },
+  {
+    id: "kuroanime",
+    name: "KuroAnime VIP & Cinema Pro Suite",
+    file: "kuroanime.user.js",
+    desc: "Diệt sạch popup KuroAnime + Bắt M3U8 PotPlayer/VLC + Tua Intro 85s + Bộ lọc Anime OLED HDR rực rỡ",
+    version: "5.0",
+    domains: [
+          "*://*.kuroanime.net/*",
+          "*://*.kuroanime.tv/*",
+          "*://*.kuroanime.com/*",
+          "*://*.kuroanime.org/*"
+    ],
+    siteCss: ".ad-container, .ads-holder, div[id*=\"ad-\"], div[class*=\"banner-ads\"], div[id*=\"catfish\"], .modal-adblock, .ka-ads"
+  },
+  {
+    id: "ghienanime",
+    name: "GhienAnime VIP & Cinema Pro Suite",
+    file: "ghienanime.user.js",
+    desc: "Chặn 100% quảng cáo Ghiền Anime + Sniff M3U8 PotPlayer/VLC + Tua nhanh Intro 85s + Anime OLED HDR",
+    version: "5.0",
+    domains: [
+          "*://*.ghienanime.net/*",
+          "*://*.ghienanime.tv/*",
+          "*://*.ghienanime.com/*",
+          "*://*.ghienanime.org/*"
+    ],
+    siteCss: ".ad-banner, .banner-ads, #box-ads, div[id*=\"ad_\"], div[class*=\"ad_box\"], .ads-placement, #catfish, .modal-adblock, .ga-ads"
+  },
+  {
+    id: "wibuvn",
+    name: "WibuVN VIP & Cinema Pro Suite",
+    file: "wibuvn.user.js",
+    desc: "Chặn quảng cáo WibuVN + Sniff luồng M3U8 PotPlayer/VLC + Bỏ qua Intro 85s + Bộ lọc Anime OLED HDR & VIP Hub",
+    version: "5.0",
+    domains: [
+          "*://*.wibu.tv/*",
+          "*://*.wibuvn.net/*",
+          "*://*.wibuvn.com/*",
+          "*://*.wibuvn.org/*"
+    ],
+    siteCss: ".adsbox, .ad-banner, div[class*=\"banner-ads\"], div[id*=\"ad_\"], .modal-adblock, .wb-ads"
+  },
+  {
+    id: "daudauphim",
+    name: "DauDauPhim VIP & Cinema Pro Suite",
+    file: "daudauphim.user.js",
+    desc: "Chặn 100% quảng cáo Đầu Đậu Phim + Tóm link M3U8 PotPlayer/VLC + Skip Intro 85s + Chế độ rạp phim Cinema Mode",
+    version: "5.0",
+    domains: [
+          "*://*.daudau.tv/*",
+          "*://*.daudauphim.com/*",
+          "*://*.daudauphim.net/*",
+          "*://*.daudauphim.org/*"
+    ],
+    siteCss: ".ad-container, .ads-holder, div[id*=\"ad_\"], .banner-top, .banner-bottom, .modal-adblock, .ddp-ads"
+  },
+  {
+    id: "phimbo",
+    name: "PhimBo VIP & Cinema Pro Suite",
+    file: "phimbo.user.js",
+    desc: "Chặn quảng cáo Phim Bộ + Tóm link M3U8 PotPlayer/VLC + Bỏ qua Intro 85s + Chế độ rạp phim Cinema Mode",
+    version: "5.0",
+    domains: [
+          "*://*.phimbo.net/*",
+          "*://*.phimbo.tv/*",
+          "*://*.phimbo.org/*",
+          "*://*.phimbo.com/*"
+    ],
+    siteCss: ".ad-container, .ads-holder, .banner-left, .banner-right, div[id*=\"ad-\"], div[class*=\"banner-ads\"], div[id*=\"catfish\"], .ads-wrapper, #chancoc, .modal-adblock, .pb-ads"
+  },
+  {
+    id: "phimle",
+    name: "PhimLe VIP & Cinema Pro Suite",
+    file: "phimle.user.js",
+    desc: "Chặn 100% quảng cáo Phim Lẻ + Bắt M3U8 PotPlayer/VLC + Phím tắt Tua 5s/Skip Intro + Chế độ rạp phim Cinema Mode",
+    version: "5.0",
+    domains: [
+          "*://*.phimle.tv/*",
+          "*://*.phimle.net/*",
+          "*://*.phimle.org/*",
+          "*://*.phimle.com/*"
+    ],
+    siteCss: ".ad-banner, .banner-ads, #box-ads, div[id*=\"ad_\"], div[class*=\"ad_box\"], .ads-placement, #catfish, .modal-adblock, .pl-ads"
+  },
+  {
+    id: "bstation",
+    name: "Bstation & Bilibili VN VIP & Cinema Pro Suite",
+    file: "bstation.user.js",
+    desc: "Tối ưu trải nghiệm Bstation/Bilibili VN + Phím tắt tua 5s/Skip Intro 85s + Anime OLED HDR rực rỡ & Tải luồng video",
+    version: "5.0",
+    domains: [
+          "*://*.bilibili.tv/*",
+          "*://*.bilibili.com/*",
+          "*://*.bstarstatic.com/*"
+    ],
+    siteCss: ".ad-floor, .bili-ad, div[class*=\"bili-ad\"], .modal-adblock, .bst-ads"
+  }
 ];
 
 function generateUserscriptCode(site, isMasterAllInOne = false) {
@@ -723,7 +947,7 @@ function generateUserscriptCode(site, isMasterAllInOne = false) {
     ? "Cinema Pro Suite (All-In-One) - Kho Phim & Anime Việt Nam"
     : site.name;
   const scriptDesc = isMasterAllInOne
-    ? "Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer/VLC + Phím tắt Tua 5s/Intro 85s/Volume & Anime HDR trên hơn 52+ website phim, anime, hoạt hình 3D Việt Nam!"
+    ? "Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer/VLC + Phím tắt Tua 5s/Intro 85s/Volume & Anime HDR trên hơn 68+ website phim, anime, hoạt hình 3D Việt Nam!"
     : site.desc;
   const scriptVersion = "5.0";
   const enableRophimVip = isMasterAllInOne || Boolean(site.isRophim);
@@ -1135,7 +1359,8 @@ ${matchHeaders}
     .atvn-ads, .hhkf-ads, .hhpanda-ads, .vst-ads, .p247-ads, .phd-ads, .pbh-ads,
     .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads, .ts-ads, .ss-ads,
     .pc-ads, .lp-ads, .pn-ads, .hg-ads, .pk-ads, .cp-ads, .bn-ads,
-    .ka-ads, .am-ads, .ac-ads, .va-ads, .xp-ads, .pb-ads, .tz-ads, .pcr-ads,
+    .ka-ads, .am-ads, .ac-ads, .va-ads, .xp-ads, .pb-ads, .tz-ads, .pcr-ads,
+    .ff-ads, .hdv-ads, .pp-ads, .pg-ads, .kp-ads, .az-ads, .ph-ads, .pvs-ads, .ma-ads, .ga-ads, .wb-ads, .ddp-ads, .pl-ads, .bst-ads,
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
     div[style*="zIndex: 9999999"], div[style*="backdrop-filter: blur(25px)"] {
       display: none !important;

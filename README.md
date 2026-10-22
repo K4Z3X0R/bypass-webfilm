@@ -2,14 +2,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-5.0.0_Apex-10b981?style=for-the-badge&logo=tampermonkey&logoColor=white" alt="Version 5.0" />
-  <img src="https://img.shields.io/badge/Supported_Sites-52+_Websites-3b82f6?style=for-the-badge&logo=firefox-browser&logoColor=white" alt="Supported Sites" />
-  <img src="https://img.shields.io/badge/Test_Assertions-1087_Passed-8b5cf6?style=for-the-badge&logo=mocha&logoColor=white" alt="Tests Passed" />
+  <img src="https://img.shields.io/badge/Supported_Sites-68+_Websites-3b82f6?style=for-the-badge&logo=firefox-browser&logoColor=white" alt="Supported Sites" />
+  <img src="https://img.shields.io/badge/Test_Assertions-1407_Passed-8b5cf6?style=for-the-badge&logo=mocha&logoColor=white" alt="Tests Passed" />
   <img src="https://img.shields.io/badge/Health_Score-100.0%25-emerald?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Health Score" />
   <img src="https://img.shields.io/badge/License-MIT-amber?style=for-the-badge" alt="License MIT" />
 </p>
 
 <p align="center">
-  <strong>🔥 Vũ khí tối thượng mở khóa trải nghiệm xem phim đỉnh cao: Chặn 100% quảng cáo & popup cá cược, diệt sạch Anti-Adblock & Stream Guard, bắt trọn luồng M3U8 phát PotPlayer/VLC/IINA 1-Click, tua Intro 85s, Anime OLED HDR, Theater Mode & Mở khóa VIP vĩnh viễn trên hơn 52+ website xem phim & anime hàng đầu Việt Nam!</strong>
+  <strong>🔥 Vũ khí tối thượng mở khóa trải nghiệm xem phim đỉnh cao: Chặn 100% quảng cáo & popup cá cược, diệt sạch Anti-Adblock & Stream Guard, bắt trọn luồng M3U8 phát PotPlayer/VLC/IINA 1-Click, tua Intro 85s, Anime OLED HDR, Theater Mode, Picture-in-Picture & Mở khóa VIP vĩnh viễn trên hơn 68+ website xem phim & anime hàng đầu Việt Nam!</strong>
 </p>
 
 ---
@@ -22,7 +22,7 @@ Hầu hết các trang web chiếu phim trực tuyến hiện nay đều cài c�
 
 **Cinema Pro Suite v5.0** được thiết kế từ nguyên lý **Zero-Compromise Security & Performance**:
 1. **Patchless Anti-Adblock Defusal**: Vô hiệu hóa toàn bộ cơ chế phát hiện Adblock (`probe_until`, `adblock_detected`, `window.streamGuard`) tại tầng nguyên tử của DOM mà không làm gián đoạn luồng phát video.
-2. **Iframe Remote Control Bridge**: Cầu nối `postMessage` hai chiều xuyên qua sandbox iframe của các máy chủ streaming quốc tế (StreamTape, DoodStream, Turbovid, NguonC, PhimAPI, Vidsrc, Streamsilk, Streamruby, v.v.).
+2. **Iframe Remote Control Bridge**: Cầu nối `postMessage` hai chiều xuyên qua sandbox iframe của các máy chủ streaming quốc tế (StreamTape, DoodStream, Turbovid, NguonC, PhimAPI, Vidsrc, Streamsilk, Streamruby, Streamhide, Vidguard, 2Embed, Fembed, v.v.).
 3. **M3U8 Sniffer & Direct Desktop Playback**: Bắt trọn link luồng m3u8 sạch và kích hoạt ngay **PotPlayer / VLC / IINA / MPV** với độ trễ 0s và chất lượng hình ảnh gốc tối đa.
 4. **Glassmorphism Floating Control Hub**: Bảng điều khiển nổi sang trọng, hiện đại với hiệu ứng làm mờ nền kính, tích hợp đầy đủ 13 phím chức năng thần thánh.
 
@@ -34,19 +34,21 @@ Dự án được tái cấu trúc theo tiêu chuẩn mã nguồn mở quốc t�
 
 ```text
 bypass-webfilm/
-├── scripts/                # 📂 Toàn bộ 52+ Userscripts cho từng web & Master All-In-One Suite
+├── scripts/                # 📂 Toàn bộ 68+ Userscripts cho từng web & Master All-In-One Suite
 │   ├── cinema-pro-all.user.js   # 👑 Bản Master Gộp (All-In-One: 1 script chạy toàn bộ web)
 │   ├── rophim.user.js           # 🎬 Rổ Phim VIP 2099 + Vô hạn Coin
 │   ├── motchill.user.js         # 🍿 Motchill VIP & Stream Guard Killer
+│   ├── fimfast.user.js          # ⚡ FimFast Pro
+│   ├── hdviet.user.js           # 💎 HDViet VIP Unlocked
 │   ├── animevietsub.user.js     # 🌸 AnimeVietsub OLED HDR & Skip Intro
 │   ├── phimmoi.user.js          # 🎥 PhimMoi & PhimMoiChill
 │   ├── hoathinh3d.user.js       # 🐉 Hoạt Hình 3D Trung Quốc
-│   ├── phimchill.user.js        # 🌴 PhimChill Pro
-│   └── ...                      # (54 files userscript drop-in production)
+│   ├── bstation.user.js         # 📺 Bstation & Bilibili VN Optimizer
+│   └── ...                      # (70 files userscript drop-in production)
 ├── src/                    # 📂 Lõi JavaScript thuần (Engine Core)
 │   └── core.js                  # Lõi thực thi ES2022 không kèm header (dành cho console/nhúng)
-├── build_all_scripts.js    # 🛠️ Trình tạo mã & build tự động 54 Userscripts song song
-├── run_audit.js            # 🧪 Bộ kiểm thử tự động toàn diện Sandbox VM (750+ assertions)
+├── build_all_scripts.js    # 🛠️ Trình tạo mã & build tự động 70 Userscripts song song
+├── run_audit.js            # 🧪 Bộ kiểm thử tự động toàn diện Sandbox VM (1,400+ assertions)
 └── README.md               # 📖 Tài liệu hướng dẫn & Bảng link cài đặt 1-Click
 ```
 
@@ -67,6 +69,7 @@ bypass-webfilm/
 | **Không gian rạp phim (Theater Mode)** | Web sáng chói, giao diện xung quanh rối mắt | 🎭 **Phím `T` (Cinema Mode)**: Làm tối toàn bộ web, nổi bật khung video |
 | **Xem đa nhiệm (Picture-in-Picture)** | Thường bị khóa bởi trình phát của web | 🖼️ **Phím `P` (PiP Mode)**: Đưa video nổi góc màn hình để vừa làm việc vừa xem |
 | **Điều khiển tốc độ linh hoạt** | Bị khóa ở 1x hoặc chỉ lên tối đa 2x | ⚡ **Phím `[` & `]`**: Tùy chỉnh tốc độ từ `0.5x` đến `3.0x` mượt mà |
+| **Tua từng khung hình (Frame Step)** | Không hỗ trợ | 🎞️ **Phím `,` & `.`**: Lùi / Tiến chính xác 0.04s (1 frame) |
 | **Đặc quyền VIP Rổ Phim (Rophim)** | Phải nạp tiền thật mua VIP & Coin | 💰 **Mở khóa VIP 2099 + 999,999,999 Coin tự động** |
 
 ---
@@ -81,7 +84,7 @@ flowchart TD
         Inject --> Neutralize["🛡️ Defuse Anti-Adblock Probes & Block Popups"]
         Inject --> InjectHub["👑 Khởi Tạo VIP Floating Hub & CSS Rạp Phim"]
         Inject --> SniffFetch["📡 Hook Fetch / XHR / Video Element"]
-        InjectHub --> Hotkeys["⌨️ Lắng Nghe Phím Tắt Toàn Cục (S, P, F, T, E...)"]
+        InjectHub --> Hotkeys["⌨️ Lắng Nghe Phím Tắt Toàn Cục (S, P, F, T, E, H, Comma, Dot...)"]
     end
     
     subgraph IframeEmbed["Trình Phát Nhúng (Iframe Stream Embed)"]
@@ -116,14 +119,14 @@ Cài đặt một trong các tiện ích mở rộng miễn phí sau (Khuyên d�
 ### Bước 2: Cài đặt Script VIP (Chọn Bản Phù Hợp)
 
 #### 👑 1. KHUYÊN DÙNG: BẢN MASTER TẤT CẢ TRONG MỘT (ALL-IN-ONE)
-Chỉ cần bấm cài đặt **DUY NHẤT 1 LẦN**, script sẽ tự động nhận diện và kích hoạt full tính năng VIP trên **TOÀN BỘ 52+ WEBSITE PHIM BÊN DƯỚI**:
+Chỉ cần bấm cài đặt **DUY NHẤT 1 LẦN**, script sẽ tự động nhận diện và kích hoạt full tính năng VIP trên **TOÀN BỘ 68+ WEBSITE PHIM BÊN DƯỚI**:
 
 👉 **[BẤM VÀO ĐÂY ĐỂ CÀI ĐẶT BẢN ALL-IN-ONE](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/cinema-pro-all.user.js)**  
 *(Tự động cập nhật phiên bản mới nhất từ GitHub khi có web đổi tên miền)*
 
 ---
 
-#### 🎬 2. BẢN DÀNH RIÊNG CHO PHIM CHIẾU RẠP, PHIM LẺ & PHIM BỘ (25 Web)
+#### 🎬 2. BẢN DÀNH RIÊNG CHO PHIM CHIẾU RẠP, PHIM LẺ & PHIM BỘ (35 Web)
 
 | Trang Web | Trạng Thái | Link Cài Đặt 1-Click | Tên Miền Hỗ Trợ |
 | :--- | :---: | :---: | :--- |
@@ -152,10 +155,20 @@ Chỉ cần bấm cài đặt **DUY NHẤT 1 LẦN**, script sẽ tự động n
 | 🎬 **PhimBom** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMBOM](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimbom.user.js)** | `phimbom.tv`, `phimbom.net`, `phimbom.org`... |
 | 🎬 **TVZing & ZingTV** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT TVZING & ZINGTV](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/tvzing.user.js)** | `tvzing.net`, `tvzing.tv`, `zingtv.com`... |
 | 🎬 **PhimChieuRap** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMCHIEURAP](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimchieurap.user.js)** | `phimchieurap.tv`, `phimchieurap.net`, `phimchieurap.org`... |
+| 🎬 **FimFast** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT FIMFAST](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/fimfast.user.js)** | `fimfast.com`, `fimfast.tv`, `fimfast.net`... |
+| 🎬 **HDViet** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT HDVIET](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/hdviet.user.js)** | `hdviet.com`, `movies.hdviet.com`, `hdviet.net`... |
+| 🎬 **PhimPlay** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMPLAY](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimplay.user.js)** | `phimplay.net`, `phimplay.tv`, `phimplay.org`... |
+| 🎬 **PhimGi** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMGI](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimgi.user.js)** | `phimgi.net`, `phimgi.tv`, `phimgi.cc`... |
+| 🎬 **KPhim** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT KPHIM](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/kphim.user.js)** | `kphim.tv`, `kphim.net`, `kphim.co`... |
+| 🎬 **PhimHub** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMHUB](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimhub.user.js)** | `phimhub.tv`, `phimhub.net`, `phimhub.org`... |
+| 🎬 **PhimVietsub** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMVIETSUB](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimvietsub.user.js)** | `phimvietsub.org`, `phimvietsub.net`, `phimvietsub.tv`... |
+| 🎬 **DauDauPhim** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT DAUDAUPHIM](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/daudauphim.user.js)** | `daudau.tv`, `daudauphim.com`, `daudauphim.net`... |
+| 🎬 **PhimBo** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMBO](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimbo.user.js)** | `phimbo.net`, `phimbo.tv`, `phimbo.org`... |
+| 🎬 **PhimLe** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT PHIMLE](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/phimle.user.js)** | `phimle.tv`, `phimle.net`, `phimle.org`... |
 
 ---
 
-#### 🌸 3. BẢN DÀNH RIÊNG CHO ANIME VIETSUB & HOẠT HÌNH 3D TRUNG QUỐC (13 Web)
+#### 🌸 3. BẢN DÀNH RIÊNG CHO ANIME VIETSUB & HOẠT HÌNH 3D TRUNG QUỐC (19 Web)
 
 | Trang Web | Trạng Thái | Link Cài Đặt 1-Click | Tên Miền Hỗ Trợ |
 | :--- | :---: | :---: | :--- |
@@ -172,6 +185,12 @@ Chỉ cần bấm cài đặt **DUY NHẤT 1 LẦN**, script sẽ tự động n
 | 🎬 **AnimeMoi** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIMEMOI](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/animemoi.user.js)** | `animemoi.com`, `animemoi.net`, `animemoi.tv`... |
 | 🎬 **AnimeChill** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIMECHILL](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/animechill.user.js)** | `animechill.net`, `animechill.tv`, `animechill.org`... |
 | 🎬 **VietAnime** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT VIETANIME](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/vietanime.user.js)** | `vietanime.net`, `vietanime.tv`, `vietanime.org`... |
+| 🎬 **AnimeZ** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT ANIMEZ](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/animez.user.js)** | `animez.tv`, `animez.net`, `animez.org`... |
+| 🎬 **MotAnime** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT MOTANIME](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/motanime.user.js)** | `motanime.tv`, `motanime.net`, `motanime.org`... |
+| 🎬 **KuroAnime** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT KUROANIME](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/kuroanime.user.js)** | `kuroanime.net`, `kuroanime.tv`, `kuroanime.com`... |
+| 🎬 **GhienAnime** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT GHIENANIME](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/ghienanime.user.js)** | `ghienanime.net`, `ghienanime.tv`, `ghienanime.com`... |
+| 🎬 **WibuVN** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT WIBUVN](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/wibuvn.user.js)** | `wibu.tv`, `wibuvn.net`, `wibuvn.com`... |
+| 🎬 **Bstation & Bilibili VN** | 🟢 Sẵn sàng | 👉 **[CÀI ĐẶT BSTATION & BILIBILI VN](https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/scripts/bstation.user.js)** | `bilibili.tv`, `bilibili.com`, `bstarstatic.com` |
 
 ---
 
@@ -242,12 +261,12 @@ Các phím tắt hoạt động đồng nhất trên mọi trình phát và mọ
 
 ## 🧪 Hệ Thống Kiểm Định Chất Lượng Tự Động (Automated Verification)
 
-Mỗi bản build của dự án được kiểm tra nghiêm ngặt qua bộ kiểm thử tự động [`run_audit.js`](file:///run_audit.js) với **1,087 Assertions** trong môi trường cô lập Node.js VM:
-- **Phase 1: Metadata & Syntax Inspection** (54 Userscripts + `src/core.js`): Kiểm tra cú pháp ES2022, author, link download/update GitHub Raw, flags `@allFrames` và `@run-at`.
-- **Phase 2: Top Window DOM & 13 VIP Hub Control Buttons** (54 files): Giả lập DOM top-window, xác thực 13 nút bấm chức năng (PotPlayer, VLC, Copy, M3U, Skip Intro, PiP, Fullscreen, HDR, Theater, Volume Up/Down, Speed Up/Down), bẫy click ad popup, bảo vệ probe localStorage, bắt luồng và 18 phím tắt Pro.
-- **Phase 3: Iframe Player Embed & Stream Guard Defusal** (54 files): Kiểm thử sandbox nhúng player, defuse `streamGuard.isBlocked()`, tự động tua quảng cáo pre-roll & click `.jw-skip`, vô hiệu hóa `HTMLMediaElement.prototype.pause` do adblock gây ra, và truyền lệnh điều khiển từ xa.
+Mỗi bản build của dự án được kiểm tra nghiêm ngặt qua bộ kiểm thử tự động [`run_audit.js`](file:///run_audit.js) với **1,407 Assertions** trong môi trường cô lập Node.js VM:
+- **Phase 1: Metadata & Syntax Inspection** (70 Userscripts + `src/core.js`): Kiểm tra cú pháp ES2022, author, link download/update GitHub Raw, flags `@allFrames` và `@run-at`.
+- **Phase 2: Top Window DOM & 13 VIP Hub Control Buttons** (70 files): Giả lập DOM top-window, xác thực 13 nút bấm chức năng (PotPlayer, VLC, Copy, M3U, Skip Intro, PiP, Fullscreen, HDR, Theater, Volume Up/Down, Speed Up/Down), bẫy click ad popup, bảo vệ probe localStorage, bắt luồng và 18 phím tắt Pro.
+- **Phase 3: Iframe Player Embed & Stream Guard Defusal** (70 files): Kiểm thử sandbox nhúng player, defuse `streamGuard.isBlocked()`, tự động tua quảng cáo pre-roll & click `.jw-skip`, vô hiệu hóa `HTMLMediaElement.prototype.pause` do adblock gây ra, và truyền lệnh điều khiển từ xa.
 - **Phase 4: Rophim VIP 2099 & T-Coin Response Patcher** (`rophim.user.js`, `tampermonkey.user.js`, `cinema-pro-all.user.js`): Kiểm toán can thiệp API `/tcoin/me`, `/api/auth/session` và recursive nested payload `/vip/check`.
-- **Phase 5: README.md 1-Click Install Links Sync** (53 files): Đồng bộ 100% link cài đặt thực tế trong tài liệu.
+- **Phase 5: README.md 1-Click Install Links Sync** (69 files): Đồng bộ 100% link cài đặt thực tế trong tài liệu.
 
 Chạy kiểm định toàn diện:
 ```bash

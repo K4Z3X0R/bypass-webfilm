@@ -6,7 +6,7 @@
 
 // @version      5.0
 
-// @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer/VLC + Phím tắt Tua 5s/Intro 85s/Volume & Anime HDR trên hơn 52+ website phim, anime, hoạt hình 3D Việt Nam!
+// @description  Bản Master Gộp Tất Cả Trong Một: Mở khóa VIP + Vô hạn Coin + Chặn 100% AdBlock/Stream Guard + M3U8 Sniffer + 1-Click PotPlayer/VLC + Phím tắt Tua 5s/Intro 85s/Volume & Anime HDR trên hơn 68+ website phim, anime, hoạt hình 3D Việt Nam!
 
 // @author       ekaznyra
 
@@ -248,6 +248,69 @@
 // @match        *://*.phimchieurap.net/*
 // @match        *://*.phimchieurap.org/*
 // @match        *://*.phimchieurap.vip/*
+// @match        *://*.fimfast.com/*
+// @match        *://*.fimfast.tv/*
+// @match        *://*.fimfast.net/*
+// @match        *://*.fimfast.org/*
+// @match        *://*.hdviet.com/*
+// @match        *://movies.hdviet.com/*
+// @match        *://*.hdviet.net/*
+// @match        *://*.hdviet.tv/*
+// @match        *://*.phimplay.net/*
+// @match        *://*.phimplay.tv/*
+// @match        *://*.phimplay.org/*
+// @match        *://*.phimplay.com/*
+// @match        *://*.phimgi.net/*
+// @match        *://*.phimgi.tv/*
+// @match        *://*.phimgi.cc/*
+// @match        *://*.phimgi.com/*
+// @match        *://*.kphim.tv/*
+// @match        *://*.kphim.net/*
+// @match        *://*.kphim.co/*
+// @match        *://*.kphim.org/*
+// @match        *://*.animez.tv/*
+// @match        *://*.animez.net/*
+// @match        *://*.animez.org/*
+// @match        *://*.animez.com/*
+// @match        *://*.phimhub.tv/*
+// @match        *://*.phimhub.net/*
+// @match        *://*.phimhub.org/*
+// @match        *://*.phimhub.co/*
+// @match        *://*.phimvietsub.org/*
+// @match        *://*.phimvietsub.net/*
+// @match        *://*.phimvietsub.tv/*
+// @match        *://*.phimvietsub.com/*
+// @match        *://*.motanime.tv/*
+// @match        *://*.motanime.net/*
+// @match        *://*.motanime.org/*
+// @match        *://*.motanime.com/*
+// @match        *://*.kuroanime.net/*
+// @match        *://*.kuroanime.tv/*
+// @match        *://*.kuroanime.com/*
+// @match        *://*.kuroanime.org/*
+// @match        *://*.ghienanime.net/*
+// @match        *://*.ghienanime.tv/*
+// @match        *://*.ghienanime.com/*
+// @match        *://*.ghienanime.org/*
+// @match        *://*.wibu.tv/*
+// @match        *://*.wibuvn.net/*
+// @match        *://*.wibuvn.com/*
+// @match        *://*.wibuvn.org/*
+// @match        *://*.daudau.tv/*
+// @match        *://*.daudauphim.com/*
+// @match        *://*.daudauphim.net/*
+// @match        *://*.daudauphim.org/*
+// @match        *://*.phimbo.net/*
+// @match        *://*.phimbo.tv/*
+// @match        *://*.phimbo.org/*
+// @match        *://*.phimbo.com/*
+// @match        *://*.phimle.tv/*
+// @match        *://*.phimle.net/*
+// @match        *://*.phimle.org/*
+// @match        *://*.phimle.com/*
+// @match        *://*.bilibili.tv/*
+// @match        *://*.bilibili.com/*
+// @match        *://*.bstarstatic.com/*
 // @match        *://*.streamc.xyz/*
 // @match        *://embed*.streamc.xyz/*
 // @match        *://*.stream*.xyz/*
@@ -1083,6 +1146,7 @@
     .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads, .ts-ads, .ss-ads,
     .pc-ads, .lp-ads, .pn-ads, .hg-ads, .pk-ads, .cp-ads, .bn-ads,
     .ka-ads, .am-ads, .ac-ads, .va-ads, .xp-ads, .pb-ads, .tz-ads, .pcr-ads,
+    .ff-ads, .hdv-ads, .pp-ads, .pg-ads, .kp-ads, .az-ads, .ph-ads, .pvs-ads, .ma-ads, .ga-ads, .wb-ads, .ddp-ads, .pl-ads, .bst-ads,
 
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
 

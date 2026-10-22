@@ -833,6 +833,7 @@
     .pv-ads, .btv-ads, .hdo-ads, .chay-ads, .xpp-ads, .ts-ads, .ss-ads,
     .pc-ads, .lp-ads, .pn-ads, .hg-ads, .pk-ads, .cp-ads, .bn-ads,
     .ka-ads, .am-ads, .ac-ads, .va-ads, .xp-ads, .pb-ads, .tz-ads, .pcr-ads,
+    .ff-ads, .hdv-ads, .pp-ads, .pg-ads, .kp-ads, .az-ads, .ph-ads, .pvs-ads, .ma-ads, .ga-ads, .wb-ads, .ddp-ads, .pl-ads, .bst-ads,
 
     [class*="ad_placement"], [id*="google_ads"], div[style*="z-index: 9999999"],
 
