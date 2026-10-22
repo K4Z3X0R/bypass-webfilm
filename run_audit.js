@@ -59,7 +59,7 @@ scriptFiles.forEach(file => {
 
   // Download & Update URL
   if (file !== "tampermonkey.user.js") {
-    const expectedUrl = `https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/${file}`;
+    const expectedUrl = `https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/${file}`;
     const hasDownload = content.includes(`@downloadURL  ${expectedUrl}`);
     const hasUpdate = content.includes(`@updateURL    ${expectedUrl}`);
     report(`${file}: Correct Raw DownloadURL`, hasDownload, `Missing ${expectedUrl}`);
@@ -732,7 +732,7 @@ console.log("\n📖 PHASE 5: README.md 1-Click Install Links & Documentation Syn
 const readmeContent = fs.readFileSync("README.md", "utf8");
 scriptFiles.forEach(file => {
   if (file === "tampermonkey.user.js") return; // legacy alias
-  const rawLink = `https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/${file}`;
+  const rawLink = `https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/${file}`;
   const inReadme = readmeContent.includes(rawLink);
   report(`README.md: Contains 1-Click Install Link for ${file}`, inReadme, `Missing link: ${rawLink}`);
 });

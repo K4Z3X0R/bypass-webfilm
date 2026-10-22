@@ -37,9 +37,9 @@
 // @grant        none
 // @license      MIT
 // @icon         https://rophim1.vip/apple-icon.png
-// @homepageURL  https://github.com/ekaznyra/bypass-rophim
-// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/phimbathu.user.js
-// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/phimbathu.user.js
+// @homepageURL  https://github.com/ekaznyra/bypass-webfilm
+// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/phimbathu.user.js
+// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/phimbathu.user.js
 // ==/UserScript==
 
 (function () {

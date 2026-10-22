@@ -41,9 +41,9 @@
 // @grant        none
 // @license      MIT
 // @icon         https://rophim1.vip/apple-icon.png
-// @homepageURL  https://github.com/ekaznyra/bypass-rophim
-// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/animevietsub.user.js
-// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/animevietsub.user.js
+// @homepageURL  https://github.com/ekaznyra/bypass-webfilm
+// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/animevietsub.user.js
+// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/animevietsub.user.js
 // ==/UserScript==
 
 (function () {

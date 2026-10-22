@@ -516,9 +516,9 @@ ${matchHeaders}
 // @grant        none
 // @license      MIT
 // @icon         https://rophim1.vip/apple-icon.png
-// @homepageURL  https://github.com/ekaznyra/bypass-rophim
-// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/${fileName}
-// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-rophim/main/${fileName}
+// @homepageURL  https://github.com/ekaznyra/bypass-webfilm
+// @downloadURL  https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/${fileName}
+// @updateURL    https://raw.githubusercontent.com/ekaznyra/bypass-webfilm/main/${fileName}
 // ==/UserScript==
 
 (function () {
